@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import create_engine
@@ -15,4 +16,6 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
-Base =  declarative_base()
+Base = declarative_base()
+
+Base.metadata.create_all(engine)
