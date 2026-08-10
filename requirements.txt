@@ -1,0 +1,20 @@
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Authentication / security
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+# Environment variables
+python-dotenv
+
+# HTTP / OAuth
+httpx
+
+# Testing
+pytest
