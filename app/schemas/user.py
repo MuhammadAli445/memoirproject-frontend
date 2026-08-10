@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from email_validator import EmailStr
 
 
 class UserResponse(BaseModel):
