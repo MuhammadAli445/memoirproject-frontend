@@ -31,7 +31,12 @@ def get_current_user(
         raise unauthorized
 
     user_id = payload.get("sub")
-    if not user_id:
+    if user_id is None:
+        raise unauthorized
+
+    try:
+        user_id = int(user_id)
+    except (TypeError, ValueError):
         raise unauthorized
 
     user = user_repository.get_by_id(user_id)

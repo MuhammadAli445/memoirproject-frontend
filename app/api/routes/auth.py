@@ -26,8 +26,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 def _issue_tokens(user: User) -> TokenResponse:
     return TokenResponse(
-        access_token=create_access_token(user.id),
-        refresh_token=create_refresh_token(user.id),
+        access_token=create_access_token(str(user.id)),
+        refresh_token=create_refresh_token(str(user.id)),
     )
 
 
