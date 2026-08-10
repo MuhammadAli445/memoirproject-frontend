@@ -17,5 +17,3 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
-
-Base.metadata.create_all(engine)

@@ -1,6 +1,6 @@
+from typing import Optional
 from pydantic import BaseModel
-from email_validator import EmailStr
-
+from pydantic import EmailStr
 
 class UserResponse(BaseModel):
     name: str
@@ -8,5 +8,5 @@ class UserResponse(BaseModel):
 
 
 class UpdateUserRequest(BaseModel):
-    name: str
-    password: str
+    name: Optional[str] = None
+    password: Optional[str] = None
