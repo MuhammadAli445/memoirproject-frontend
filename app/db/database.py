@@ -1,5 +1,3 @@
-print("DATABASE FILE IS RUNNING")
-
 import os
 
 from dotenv import load_dotenv
