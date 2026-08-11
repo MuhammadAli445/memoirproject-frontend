@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr
 class SignupRequest(BaseModel):
     email: EmailStr
     password: str
+    name: str | None = None
 
 
 class LoginRequest(BaseModel):
@@ -27,6 +28,7 @@ class AccessTokenResponse(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: int
+    id: str
     email: EmailStr
+    name: str | None = None
     is_oauth_user: bool

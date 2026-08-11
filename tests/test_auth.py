@@ -36,8 +36,8 @@ class TestAuth(unittest.TestCase):
         self.db.close()
 
     def test_auth_flow(self):
-        # 1. Test Signup
-        signup_data = SignupRequest(email="test_jwt@example.com", password="mypassword123")
+        # 1. Test Signup with name
+        signup_data = SignupRequest(email="test_jwt@example.com", password="mypassword123", name="Alex Mercer")
         token_res = signup(body=signup_data)
         self.assertIsNotNone(token_res.access_token)
         self.assertIsNotNone(token_res.refresh_token)
@@ -68,8 +68,26 @@ class TestAuth(unittest.TestCase):
         self.assertIsNotNone(user)
         me_res = me(current_user=user)
         self.assertEqual(me_res.email, "test_jwt@example.com")
+        self.assertEqual(me_res.name, "Alex Mercer")
         self.assertFalse(me_res.is_oauth_user)
+
+
+    def test_health_and_root_endpoints(self):
+        from fastapi.testclient import TestClient
+        from app.main import app
+
+        client = TestClient(app)
+
+        # Health endpoint
+        res = client.get("/health")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json().get("status"), "ok")
+
+        # Root endpoint (returns index.html or json status)
+        res_root = client.get("/")
+        self.assertEqual(res_root.status_code, 200)
 
 
 if __name__ == "__main__":
     unittest.main()
+

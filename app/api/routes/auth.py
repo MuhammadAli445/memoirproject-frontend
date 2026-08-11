@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 
+from app.core.config import get_settings
 from app.core.dependencies import get_current_user
 from app.core.google_oauth import (
     GoogleOAuthError,
@@ -39,6 +40,7 @@ def signup(body: SignupRequest) -> TokenResponse:
     user = user_repository.create(
         email=body.email,
         hashed_password=hash_password(body.password),
+        name=body.name,
     )
     return _issue_tokens(user)
 
@@ -67,20 +69,33 @@ def refresh(body: RefreshRequest) -> AccessTokenResponse:
 
 @router.get("/me", response_model=UserOut)
 def me(current_user: User = Depends(get_current_user)) -> UserOut:
-    return UserOut(id=current_user.id, email=current_user.email, is_oauth_user=current_user.is_oauth_user)
+    return UserOut(
+        id=str(current_user.id),
+        email=current_user.email,
+        name=current_user.name,
+        is_oauth_user=current_user.is_oauth_user,
+    )
+
 
 
 # --- Google OAuth ---
 
 @router.get("/google/login")
 def google_login(request: Request) -> RedirectResponse:
+    settings = get_settings()
+    if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Google OAuth is not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env",
+        )
     state = generate_state()
     request.session["oauth_state"] = state
     return RedirectResponse(build_authorization_url(state))
 
 
-@router.get("/google/callback", response_model=TokenResponse)
-async def google_callback(request: Request, code: str, state: str) -> TokenResponse:
+
+@router.get("/google/callback")
+async def google_callback(request: Request, code: str, state: str) -> RedirectResponse:
     expected_state = request.session.pop("oauth_state", None)
     if not expected_state or state != expected_state:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Invalid OAuth state")
@@ -92,8 +107,14 @@ async def google_callback(request: Request, code: str, state: str) -> TokenRespo
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(exc))
 
     email = claims["email"]
+    name = claims.get("name") or claims.get("given_name")
     user = user_repository.get_by_email(email)
     if user is None:
-        user = user_repository.create(email=email, is_oauth_user=True)
+        user = user_repository.create(email=email, name=name, is_oauth_user=True)
 
-    return _issue_tokens(user)
+    issued = _issue_tokens(user)
+    return RedirectResponse(
+        url=f"/?access_token={issued.access_token}&refresh_token={issued.refresh_token}"
+    )
+
+

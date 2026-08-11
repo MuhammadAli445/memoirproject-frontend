@@ -34,13 +34,9 @@ def get_current_user(
     if user_id is None:
         raise unauthorized
 
-    try:
-        user_id = int(user_id)
-    except (TypeError, ValueError):
-        raise unauthorized
-
-    user = user_repository.get_by_id(user_id)
+    user = user_repository.get_by_id(str(user_id))
     if user is None:
         raise unauthorized
+
 
     return user

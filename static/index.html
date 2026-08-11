@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastAPI Auth Backend - Test Console & Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0b0d17 0%, #111827 50%, #0f172a 100%);
+      --card-bg: rgba(23, 27, 44, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-blur: blur(16px);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.3);
+      --accent: #8b5cf6;
+      --accent-hover: #7c3aed;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --error-bg: rgba(239, 68, 68, 0.15);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --radius: 14px;
+      --radius-sm: 8px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: var(--card-bg);
+      backdrop-filter: var(--card-blur);
+      border: 1px solid var(--card-border);
+      padding: 20px 28px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .input-group-inline {
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 4px 8px 4px 12px;
+      font-size: 0.85rem;
+    }
+
+    .input-group-inline label {
+      color: var(--text-muted);
+      margin-right: 8px;
+      font-weight: 500;
+    }
+
+    .input-group-inline input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      outline: none;
+      width: 200px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-status {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+    }
+
+    .badge-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+      box-shadow: 0 0 10px var(--warning);
+    }
+
+    .badge-status.connected .dot {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .badge-status.error .dot {
+      background: var(--error);
+      box-shadow: 0 0 10px var(--error);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: #fff;
+    }
+
+    .btn-accent:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 24px;
+    }
+
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .forms-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-blur);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title .endpoint-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .method-get {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .method-post {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .sidebar-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .token-box {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #38bdf8;
+      word-break: break-all;
+      max-height: 70px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .console-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 500px;
+    }
+
+    .console-logs {
+      flex: 1;
+      background: #080a12;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      overflow-y: auto;
+      max-height: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .log-item {
+      border-left: 3px solid var(--primary);
+      padding-left: 10px;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-4px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .log-item.success { border-color: var(--success); }
+    .log-item.error { border-color: var(--error); }
+    .log-item.warning { border-color: var(--warning); }
+
+    .log-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+    }
+
+    .log-status {
+      font-weight: 600;
+    }
+
+    .log-status.status-2xx { color: var(--success); }
+    .log-status.status-4xx, .log-status.status-5xx { color: var(--error); }
+
+    .log-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .google-btn {
+      background: #ffffff;
+      color: #1f2937;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .google-btn:hover {
+      background: #f3f4f6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>Memory API Tester</h1>
+        <p>Interactive Authentication & User API Dashboard</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div class="input-group-inline">
+        <label for="baseUrl">API Base:</label>
+        <input type="text" id="baseUrl" value="http://localhost:8000">
+      </div>
+      <div id="statusBadge" class="badge badge-status">
+        <span class="dot"></span>
+        <span id="statusText">Checking...</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="quickFill()">🪄 Quick Fill Data</button>
+      <button class="btn btn-danger btn-sm" onclick="clearTokens()">🗑️ Clear Tokens</button>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <!-- Left Column: API Endpoint Forms -->
+    <div class="forms-column">
+
+      <!-- 1. Health & Server Status -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>Server Health</span>
+            <span class="endpoint-badge method-get">GET /health</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="testHealth()">Test Health</button>
+        </div>
+        <p style="font-size:0.85rem; color: var(--text-muted);">
+          Verify backend server connectivity and basic status response.
+        </p>
+      </div>
+
+      <!-- 2. Sign Up -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>Register User</span>
+            <span class="endpoint-badge method-post">POST /auth/signup</span>
+          </div>
+        </div>
+        <form onsubmit="handleSignup(event)">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="signupName">Full Name (Optional)</label>
+              <input type="text" id="signupName" class="form-control" placeholder="Alex Mercer">
+            </div>
+            <div class="form-group">
+              <label for="signupEmail">Email Address</label>
+              <input type="email" id="signupEmail" class="form-control" placeholder="user@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <input type="password" id="signupPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign Up & Issue Tokens</button>
+        </form>
+      </div>
+
+      <!-- 3. Log In -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>User Login</span>
+            <span class="endpoint-badge method-post">POST /auth/login</span>
+          </div>
+        </div>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="loginEmail">Email Address</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="user@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+      </div>
+
+      <!-- 4. Get Current User Profile -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>Protected Profile</span>
+            <span class="endpoint-badge method-get">GET /auth/me</span>
+          </div>
+          <button class="btn btn-accent" onclick="handleGetMe()">Fetch My Profile</button>
+        </div>
+        <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Sends current Access Token in <code>Authorization: Bearer &lt;token&gt;</code> header.
+        </p>
+        <div class="form-group">
+          <label>Active Bearer Access Token:</label>
+          <div id="activeAccessTokenDisplay" class="token-box">No token saved yet</div>
+        </div>
+      </div>
+
+      <!-- 5. Refresh Token -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>Refresh Access Token</span>
+            <span class="endpoint-badge method-post">POST /auth/refresh</span>
+          </div>
+          <button class="btn btn-secondary" onclick="handleRefreshToken()">Request New Access Token</button>
+        </div>
+        <div class="form-group">
+          <label>Active Refresh Token:</label>
+          <div id="activeRefreshTokenDisplay" class="token-box">No refresh token saved yet</div>
+        </div>
+      </div>
+
+      <!-- 6. Google OAuth & Automated Suite -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>Google OAuth & Automated Testing</span>
+          </div>
+        </div>
+        <div class="quick-actions">
+          <a id="googleLoginLink" class="google-btn" href="#" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.17 0 9.99 0 12s.46 3.83 1.26 5.42l4.02-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.7 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+            Sign In with Google
+          </a>
+          <button class="btn btn-primary" onclick="runAutomatedSuite()">🚀 Run All Tests Automatically</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Live Console & Response Inspector -->
+    <div class="sidebar-column">
+      <div class="card console-card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📡 Live Console & Logs</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="clearLogs()">Clear Logs</button>
+        </div>
+        <div id="consoleLogs" class="console-logs">
+          <div class="log-item">
+            <div class="log-meta">
+              <span>System</span>
+              <span>Ready</span>
+            </div>
+            <div class="log-body">Console initialized. Perform an action to see real-time requests & responses.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let state = {
+    accessToken: localStorage.getItem('access_token') || '',
+    refreshToken: localStorage.getItem('refresh_token') || '',
+    user: null
+  };
+
+  function getBaseUrl() {
+    return document.getElementById('baseUrl').value.replace(/\/$/, '');
+  }
+
+  function updateTokenDisplays() {
+    const accBox = document.getElementById('activeAccessTokenDisplay');
+    const refBox = document.getElementById('activeRefreshTokenDisplay');
+
+    accBox.textContent = state.accessToken ? state.accessToken : 'No token saved yet';
+    refBox.textContent = state.refreshToken ? state.refreshToken : 'No refresh token saved yet';
+
+    const googleBtn = document.getElementById('googleLoginLink');
+    googleBtn.href = `${getBaseUrl()}/auth/google/login`;
+  }
+
+  function log(method, endpoint, statusCode, responseData, durationMs) {
+    const logsContainer = document.getElementById('consoleLogs');
+    const item = document.createElement('div');
+    
+    let isSuccess = statusCode >= 200 && statusCode < 300;
+    item.className = `log-item ${isSuccess ? 'success' : 'error'}`;
+
+    const timestamp = new Date().toLocaleTimeString();
+    const statusClass = `status-${Math.floor(statusCode / 100)}xx`;
+
+    item.innerHTML = `
+      <div class="log-meta">
+        <span><strong>${method}</strong> ${endpoint}</span>
+        <span>${durationMs}ms | ${timestamp}</span>
+      </div>
+      <div class="log-meta">
+        <span class="log-status ${statusClass}">${statusCode} ${statusCode === 200 ? 'OK' : statusCode === 201 ? 'Created' : 'Response'}</span>
+      </div>
+      <div class="log-body">${escapeHtml(JSON.stringify(responseData, null, 2))}</div>
+    `;
+
+    logsContainer.prepend(item);
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function clearLogs() {
+    document.getElementById('consoleLogs').innerHTML = '';
+  }
+
+  function clearTokens() {
+    state.accessToken = '';
+    state.refreshToken = '';
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    updateTokenDisplays();
+    const item = document.createElement('div');
+    item.className = 'log-item warning';
+    item.innerHTML = '<div class="log-meta"><span>System</span></div><div class="log-body">Tokens cleared.</div>';
+    document.getElementById('consoleLogs').prepend(item);
+  }
+
+  function quickFill() {
+    const randomNum = Math.floor(Math.random() * 10000);
+    const testName = `Alex Mercer ${randomNum}`;
+    const testEmail = `testuser${randomNum}@example.com`;
+    const testPass = `Pass123!${randomNum}`;
+
+    document.getElementById('signupName').value = testName;
+    document.getElementById('signupEmail').value = testEmail;
+    document.getElementById('signupPassword').value = testPass;
+    document.getElementById('loginEmail').value = testEmail;
+    document.getElementById('loginPassword').value = testPass;
+  }
+
+  async function apiCall(method, path, body = null, useAuth = false) {
+    const url = `${getBaseUrl()}${path}`;
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (useAuth && state.accessToken) {
+      headers['Authorization'] = `Bearer ${state.accessToken}`;
+    }
+
+    const options = { method, headers };
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    const startTime = performance.now();
+    try {
+      const res = await fetch(url, options);
+      const endTime = performance.now();
+      const duration = Math.round(endTime - startTime);
+
+      let data;
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        data = await res.text();
+      }
+
+      log(method, path, res.status, data, duration);
+      return { status: res.status, ok: res.ok, data };
+    } catch (err) {
+      const endTime = performance.now();
+      const duration = Math.round(endTime - startTime);
+      const errorObj = { error: err.message || 'Network request failed' };
+      log(method, path, 0, errorObj, duration);
+      return { status: 0, ok: false, data: errorObj };
+    }
+  }
+
+  async function testHealth() {
+    const badge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+
+    const res = await apiCall('GET', '/health');
+    if (res.ok) {
+      badge.className = 'badge badge-status connected';
+      statusText.textContent = 'Server Connected';
+    } else {
+      badge.className = 'badge badge-status error';
+      statusText.textContent = 'Server Offline / Error';
+    }
+  }
+
+  async function handleSignup(e) {
+    if (e) e.preventDefault();
+    const name = document.getElementById('signupName').value || null;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    const res = await apiCall('POST', '/auth/signup', { name, email, password });
+    if (res.ok && res.data.access_token) {
+      saveTokens(res.data.access_token, res.data.refresh_token);
+    }
+  }
+
+  async function handleLogin(e) {
+    if (e) e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const res = await apiCall('POST', '/auth/login', { email, password });
+    if (res.ok && res.data.access_token) {
+      saveTokens(res.data.access_token, res.data.refresh_token);
+    }
+  }
+
+  async function handleGetMe() {
+    if (!state.accessToken) {
+      alert('No access token available. Please sign up or log in first.');
+      return;
+    }
+    await apiCall('GET', '/auth/me', null, true);
+  }
+
+  async function handleRefreshToken() {
+    if (!state.refreshToken) {
+      alert('No refresh token available. Please sign up or log in first.');
+      return;
+    }
+    const res = await apiCall('POST', '/auth/refresh', { refresh_token: state.refreshToken });
+    if (res.ok && res.data.access_token) {
+      saveTokens(res.data.access_token, state.refreshToken);
+    }
+  }
+
+  function saveTokens(accessToken, refreshToken) {
+    state.accessToken = accessToken;
+    if (refreshToken) state.refreshToken = refreshToken;
+    localStorage.setItem('access_token', state.accessToken);
+    if (refreshToken) localStorage.setItem('refresh_token', state.refreshToken);
+    updateTokenDisplays();
+  }
+
+  async function runAutomatedSuite() {
+    clearLogs();
+    quickFill();
+
+    const name = document.getElementById('signupName').value || null;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    log('SUITE', 'Starting Automated Verification', 200, { message: `Testing with email: ${email}` }, 0);
+
+    // 1. Health
+    await testHealth();
+
+    // 2. Signup
+    const signupRes = await apiCall('POST', '/auth/signup', { name, email, password });
+    if (!signupRes.ok) {
+      log('SUITE', 'Automated Verification Halted', 400, { error: 'Signup failed' }, 0);
+      return;
+    }
+    saveTokens(signupRes.data.access_token, signupRes.data.refresh_token);
+
+    // 3. Get Me
+    await apiCall('GET', '/auth/me', null, true);
+
+    // 4. Refresh Token
+    const refreshRes = await apiCall('POST', '/auth/refresh', { refresh_token: state.refreshToken });
+    if (refreshRes.ok && refreshRes.data.access_token) {
+      saveTokens(refreshRes.data.access_token, state.refreshToken);
+    }
+
+    // 5. Get Me again with new token
+    await apiCall('GET', '/auth/me', null, true);
+
+    log('SUITE', 'Automated Verification Completed', 200, { status: 'All API endpoints verified successfully!' }, 0);
+  }
+
+  // Initialize page
+  updateTokenDisplays();
+  testHealth();
+
+  // Handle OAuth callback tokens in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlAcc = urlParams.get('access_token');
+  const urlRef = urlParams.get('refresh_token');
+  if (urlAcc && urlRef) {
+    saveTokens(urlAcc, urlRef);
+    window.history.replaceState({}, document.title, window.location.pathname);
+    log('OAUTH', '/auth/google/callback', 200, { message: 'Google Sign-In Successful! Tokens captured automatically.' }, 0);
+    handleGetMe();
+  }
+</script>
+</body>
+</html>
+

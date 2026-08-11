@@ -41,6 +41,7 @@ def generate_state() -> str:
 
 def build_authorization_url(state: str) -> str:
     """Build the URL to redirect the user to for Google's consent screen."""
+    settings = get_settings()
     params = {
         "client_id": settings.GOOGLE_CLIENT_ID,
         "redirect_uri": settings.GOOGLE_REDIRECT_URI,
@@ -56,6 +57,7 @@ def build_authorization_url(state: str) -> str:
 
 async def exchange_code_for_tokens(code: str) -> dict[str, Any]:
     """Exchange an authorization code for Google access/id/refresh tokens."""
+    settings = get_settings()
     data = {
         "code": code,
         "client_id": settings.GOOGLE_CLIENT_ID,
@@ -84,6 +86,7 @@ async def verify_id_token(id_token: str) -> dict[str, Any]:
     Verify a Google-issued ID token's signature, issuer, audience, and
     expiry, and return its decoded claims (sub, email, email_verified, ...).
     """
+    settings = get_settings()
     jwks = await _fetch_google_jwks()
     jwt_lib = JsonWebToken(["RS256"])
 
@@ -103,3 +106,4 @@ async def verify_id_token(id_token: str) -> dict[str, Any]:
         raise GoogleOAuthError("Google account email is not verified")
 
     return dict(claims)
+
