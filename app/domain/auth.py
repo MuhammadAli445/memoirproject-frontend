@@ -4,6 +4,8 @@ from app.domain.model import User
 from app.domain.schemas import userloginSchema,UsersignupSchema,UserResponseSchema
 from app.utils.security import hash_password,verify_password
 from app.db.dependencies import get_db
+from app.core.jwt import create_access_token
+from app.core.auth import get_current_user_id
 
 
 router = APIRouter(
@@ -59,6 +61,7 @@ def login(
             detail="Invalid email or password"
         )
     
+    access_token = create_access_token(user.id)
 
     # 5. Login successful
     return {
@@ -66,3 +69,18 @@ def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+@router.get("/me", response_model=UserResponseSchema)
+def get_me(
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    return user
