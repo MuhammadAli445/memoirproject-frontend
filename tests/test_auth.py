@@ -87,6 +87,12 @@ class TestAuth(unittest.TestCase):
         res_root = client.get("/")
         self.assertEqual(res_root.status_code, 200)
 
+    def test_google_state_verification(self):
+        from app.core.google_oauth import generate_state, verify_state
+        state = generate_state()
+        self.assertTrue(verify_state(state))
+        self.assertFalse(verify_state("invalid_state_token"))
+
 
 if __name__ == "__main__":
     unittest.main()
