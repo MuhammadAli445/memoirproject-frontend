@@ -32,3 +32,36 @@ def signup(data: UsersignupSchema, db: Session = Depends(get_db)):
     db.refresh(user)
 
     return user
+
+
+@router.post("/login")
+def login(
+    data: userloginSchema,
+    db: Session = Depends(get_db)
+):
+    
+    user = db.query(User).filter(User.email == data.email).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+    
+    password_correct = verify_password(
+        data.password,
+        user.password_hash
+    )
+
+    if not password_correct:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    # 5. Login successful
+    return {
+        "message": "Login successful",
+        "user_id": user.id,
+        "email": user.email
+    }
