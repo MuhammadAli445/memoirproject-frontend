@@ -58,10 +58,11 @@ def login(
             status_code=401,
             detail="Invalid email or password"
         )
+    
 
     # 5. Login successful
     return {
         "message": "Login successful",
-        "user_id": user.id,
-        "email": user.email
+        "access_token": access_token,
+        "token_type": "bearer"
     }
