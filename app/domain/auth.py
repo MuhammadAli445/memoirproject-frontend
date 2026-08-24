@@ -60,7 +60,7 @@ def login(
             status_code=401,
             detail="Invalid email or password"
         )
-    
+
     access_token = create_access_token(user.id)
 
     # 5. Login successful
