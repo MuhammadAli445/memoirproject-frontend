@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = os.getenv("JWT_ALGORITHM")
-expire_time =os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+expire_time = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 def create_access_token(user_id: int) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=expire_time)
