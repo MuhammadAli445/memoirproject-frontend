@@ -32,14 +32,14 @@ export default function ForgotPasswordPage() {
             <h1 className="font-serif text-3xl text-charcoal">Check your email</h1>
             <p className="mt-3 text-sm leading-relaxed text-charcoal/60">
               If <span className="font-medium text-charcoal">{email}</span> is
-              registered, a six-digit reset code is on its way. It expires in
-              10 minutes.
+              registered, a password reset link is on its way. The link expires
+              in 30 minutes.
             </p>
             <Link
-              href={`/reset-password?email=${encodeURIComponent(email)}`}
+              href="/login"
               className="mt-8 inline-block w-full rounded-full bg-terracotta px-8 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark"
             >
-              I have my code
+              Back to log in
             </Link>
           </>
         ) : (
@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
             <h1 className="font-serif text-3xl text-charcoal">Forgot your password?</h1>
             <p className="mt-3 text-sm leading-relaxed text-charcoal/60">
               No trouble — enter the email you signed up with and we&apos;ll
-              send you a code to set a new one.
+              send you a link to set a new one.
             </p>
 
             <form
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
                 disabled={!canSubmit}
                 className="mt-2 w-full rounded-full bg-terracotta px-8 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {busy ? "Sending…" : "Send reset code"}
+                {busy ? "Sending…" : "Send reset link"}
               </button>
             </form>
           </>

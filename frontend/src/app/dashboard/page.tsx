@@ -6,20 +6,17 @@ import { clearTokens, fetchProfile, getAccessToken, type UserProfile } from "@/l
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [signedOut, setSignedOut] = useState(false);
+  const [signedOut, setSignedOut] = useState(() => !getAccessToken());
 
   useEffect(() => {
-    if (!getAccessToken()) {
-      setSignedOut(true);
-      return;
-    }
+    if (signedOut) return;
     fetchProfile()
       .then(setProfile)
       .catch(() => {
         clearTokens();
         setSignedOut(true);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- run only on mount
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-cream px-6 text-center">
@@ -47,11 +44,11 @@ export default function DashboardPage() {
       ) : (
         <>
           <h1 className="font-serif text-2xl text-charcoal">
-            Welcome{profile?.name ? `, ${profile.name}` : ""}
+            Welcome{profile?.full_name ? `, ${profile.full_name}` : ""}
           </h1>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-charcoal/60">
             {profile
-              ? `Signed in as ${profile.email}${profile.is_oauth_user ? " (via Google)" : ""}.`
+              ? `Signed in as ${profile.email}.`
               : "Loading your profile…"}{" "}
             The full dashboard isn&apos;t built yet.
           </p>
