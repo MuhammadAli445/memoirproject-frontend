@@ -1,18 +1,11 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = "/api";
 
 const ACCESS_TOKEN_KEY = "memoir_access_token";
-const REFRESH_TOKEN_KEY = "memoir_refresh_token";
-
-export interface AuthTokens {
-  access_token: string;
-  refresh_token: string;
-}
 
 export interface UserProfile {
-  id: string;
+  id: number;
+  full_name: string;
   email: string;
-  name: string | null;
-  is_oauth_user: boolean;
 }
 
 export function getAccessToken(): string | null {
@@ -20,14 +13,12 @@ export function getAccessToken(): string | null {
   return window.localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
-export function storeTokens(tokens: AuthTokens): void {
-  window.localStorage.setItem(ACCESS_TOKEN_KEY, tokens.access_token);
-  window.localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
+export function storeAccessToken(token: string): void {
+  window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
 }
 
 export function clearTokens(): void {
   window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-  window.localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
 async function parseError(res: Response): Promise<string> {
@@ -44,34 +35,31 @@ async function parseError(res: Response): Promise<string> {
 }
 
 export async function signup(
-  name: string,
+  fullName: string,
   email: string,
   password: string,
-): Promise<AuthTokens> {
+): Promise<{ id: number; full_name: string; email: string }> {
   const res = await fetch(`${API_URL}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ full_name: fullName, email, password }),
   });
   if (!res.ok) throw new Error(await parseError(res));
-  const tokens = (await res.json()) as AuthTokens;
-  storeTokens(tokens);
-  return tokens;
+  return res.json();
 }
 
 export async function login(
   email: string,
   password: string,
-): Promise<AuthTokens> {
+): Promise<void> {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
   if (!res.ok) throw new Error(await parseError(res));
-  const tokens = (await res.json()) as AuthTokens;
-  storeTokens(tokens);
-  return tokens;
+  const data = await res.json();
+  storeAccessToken(data.access_token);
 }
 
 export async function fetchProfile(): Promise<UserProfile> {
@@ -96,38 +84,13 @@ export function requestPasswordReset(email: string): Promise<{ message: string }
 }
 
 export async function resetPassword(
-  email: string,
-  code: string,
+  token: string,
   newPassword: string,
-): Promise<AuthTokens> {
+): Promise<void> {
   const res = await fetch(`${API_URL}/auth/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, code, new_password: newPassword }),
+    body: JSON.stringify({ token, new_password: newPassword }),
   });
   if (!res.ok) throw new Error(await parseError(res));
-  const tokens = (await res.json()) as AuthTokens;
-  storeTokens(tokens);
-  return tokens;
-}
-
-/** Sends the browser to the backend's Google consent entry point. */
-export function beginGoogleSignIn(): void {
-  window.location.href = `${API_URL}/auth/google/login`;
-}
-
-/**
- * Reads OAuth tokens from the URL fragment the backend redirects to
- * (#access_token=...&refresh_token=...), stores them, and cleans the URL.
- */
-export function consumeOAuthFragment(): AuthTokens | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.hash.slice(1));
-  const accessToken = params.get("access_token");
-  const refreshToken = params.get("refresh_token");
-  if (!accessToken || !refreshToken) return null;
-  const tokens = { access_token: accessToken, refresh_token: refreshToken };
-  storeTokens(tokens);
-  window.history.replaceState(null, "", window.location.pathname);
-  return tokens;
 }
