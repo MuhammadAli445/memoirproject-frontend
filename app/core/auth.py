@@ -1,6 +1,9 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from sqlalchemy.orm import Session
+from app.db.dependencies import get_db
+from app.domain.model import User
 from app.core.jwt import decode_access_token
 
 
@@ -30,3 +33,13 @@ def get_current_user_id(
         )
 
     return int(user_id)
+
+
+def get_current_user(
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

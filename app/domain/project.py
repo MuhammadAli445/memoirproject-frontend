@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List
 
-from db.dependencies import get_db, get_current_user   # ⚠️ path confirm karo
-from domain.model import MemoirProject, User
-from domain.schemas import ProjectCreate, ProjectUpdate, ProjectCoverUpdate, ProjectOut
+from app.db.dependencies import get_db
+from app.core.auth import get_current_user
+from app.domain.model import MemoirProject, User
+from app.domain.schemas import ProjectCreate, ProjectUpdate, ProjectCoverUpdate, ProjectOut
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 

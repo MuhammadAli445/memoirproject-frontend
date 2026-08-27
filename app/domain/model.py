@@ -3,7 +3,6 @@ from sqlalchemy import String, DateTime, Boolean, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
 
-
 class User(Base):
     __tablename__ = "users"
 
@@ -34,7 +33,7 @@ from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from db.database import Base
+from app.db.database import Base
 
 
 class MemoirProject(Base):
