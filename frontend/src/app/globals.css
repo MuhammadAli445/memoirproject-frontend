@@ -15,6 +15,23 @@
   --color-terracotta: var(--terracotta);
   --color-terracotta-dark: var(--terracotta-dark);
   --color-charcoal: var(--charcoal);
+
+  --color-ink: #1B1613;
+  --color-ink-800: #221B16;
+  --color-ink-700: #2B2219;
+  --color-ink-600: #382C21;
+
+  --color-linen: #F6F0E6;
+  --color-linen-dim: #EDE3D2;
+
+  --color-ember: #C2703F;
+  --color-ember-hover: #A85E32;
+  --color-ember-soft: #F0DCC8;
+  --color-ember-deep: #8B4513;
+
+  --color-cocoa: #2B2118;
+  --color-mist: #B9AFA2;
+  --color-mist-dim: #7C7268;
 }
 
 body {
