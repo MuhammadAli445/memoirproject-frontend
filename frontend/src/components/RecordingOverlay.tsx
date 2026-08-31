@@ -60,25 +60,25 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex animate-fadeIn flex-col bg-ink">
+    <div className="fixed inset-0 z-[60] flex animate-fadeIn flex-col bg-cream">
       {/* Top bar */}
-      <div className="flex items-center justify-between border-b border-ink-600 px-5 py-4">
+      <div className="flex items-center justify-between border-b border-charcoal/10 px-5 py-4">
         <button
           type="button"
           onClick={() => {
             recorder.reset()
             onCancel()
           }}
-          className="text-mist transition hover:text-linen"
+          className="text-charcoal/50 transition hover:text-charcoal"
           aria-label="Close"
         >
           <span className="text-xl leading-none">&times;</span>
         </button>
-        <span className="text-xs font-medium uppercase tracking-[0.14em] text-mist">New Memory</span>
+        <span className="text-xs font-medium uppercase tracking-[0.14em] text-charcoal/50">New Memory</span>
         <button
           type="button"
           onClick={handleSaveShortcut}
-          className="text-sm font-medium text-ember transition hover:text-ember-hover"
+          className="text-sm font-medium text-terracotta transition hover:text-terracotta-dark"
         >
           Save
         </button>
@@ -86,18 +86,18 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
 
       {/* Title + body preview */}
       <div className="flex-1 overflow-y-auto px-6 pb-6 pt-8">
-        <h2 className="font-display text-2xl text-linen">{title || 'Untitled memory'}</h2>
-        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-mist">
+        <h2 className="font-display text-2xl text-charcoal">{title || 'Untitled memory'}</h2>
+        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-charcoal/60">
           {bodyPreview || 'Keep talking — you can write or edit the rest after you stop recording.'}
         </p>
 
-        {recorder.error && <p className="mt-4 text-sm text-red-400">{recorder.error}</p>}
+        {recorder.error && <p className="mt-4 text-sm text-red-600">{recorder.error}</p>}
       </div>
 
       {/* Bottom recording control bar */}
-      <div className="border-t border-ink-600 bg-ink-800 px-6 pb-8 pt-6">
+      <div className="border-t border-charcoal/10 bg-white px-6 pb-8 pt-6">
         <div className="mx-auto flex max-w-sm flex-col items-center gap-6">
-          <span className="font-mono text-3xl tabular-nums text-linen">
+          <span className="font-mono text-3xl tabular-nums text-charcoal">
             {formatDuration(recorder.elapsedSeconds)}
           </span>
 
@@ -105,7 +105,7 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
             <button
               type="button"
               onClick={handleDiscard}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-mist transition hover:bg-ink-600 hover:text-linen"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-charcoal/50 transition hover:bg-cream hover:text-charcoal"
               aria-label="Discard recording"
             >
               <Trash2 className="h-5 w-5" strokeWidth={1.75} />
@@ -115,7 +115,7 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
               <button
                 type="button"
                 onClick={togglePreview}
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-ember text-white transition hover:bg-ember-hover"
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-terracotta text-cream transition hover:bg-terracotta-dark"
                 aria-label={isPreviewPlaying ? 'Pause preview' : 'Play preview'}
               >
                 {isPreviewPlaying ? (
@@ -128,7 +128,7 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
               <button
                 type="button"
                 onClick={handleStop}
-                className="flex h-16 w-16 animate-recordPulse items-center justify-center rounded-full bg-ember text-white transition hover:bg-ember-hover"
+                className="flex h-16 w-16 animate-recordPulse items-center justify-center rounded-full bg-terracotta text-cream transition hover:bg-terracotta-dark"
                 aria-label="Stop recording"
               >
                 <Square className="h-5 w-5" fill="currentColor" />
@@ -139,14 +139,14 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
               type="button"
               onClick={handleConfirm}
               disabled={recorder.phase !== 'review'}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-ink-600 text-ember transition hover:bg-ink-700 disabled:cursor-not-allowed disabled:text-mist-dim disabled:hover:bg-ink-600"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-cream text-terracotta transition hover:bg-cream disabled:cursor-not-allowed disabled:text-charcoal/30 disabled:hover:bg-cream"
               aria-label="Confirm recording"
             >
               <Check className="h-5 w-5" strokeWidth={2.25} />
             </button>
           </div>
 
-          <p className="text-xs text-mist-dim">
+          <p className="text-xs text-charcoal/40">
             {recorder.phase === 'recording'
               ? 'Tap the square to stop.'
               : 'Listen back, then confirm or discard.'}

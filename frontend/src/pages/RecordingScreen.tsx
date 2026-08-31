@@ -27,7 +27,7 @@ export default function RecordingScreen() {
   const handleAddMemory = () => router.push('/workspace')
 
   return (
-    <div className="flex min-h-screen bg-ink">
+    <div className="flex min-h-screen bg-cream">
       <Sidebar subject={subject} activeTab={activeTab} onTabChange={setActiveTab} onAddMemory={handleAddMemory} />
 
       <main className="flex-1 overflow-y-auto px-10 py-10">
@@ -37,46 +37,46 @@ export default function RecordingScreen() {
           </div>
           {/* Header row */}
           <div className="flex items-center justify-between">
-            <p className="font-mono text-xs tracking-[0.14em] text-mist">
+            <p className="font-mono text-xs tracking-[0.14em] text-charcoal/50">
               {fullDateUpper(recordingMemory.createdAt)}
             </p>
-            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-ember">
-              <span className="h-2 w-2 rounded-full bg-ember animate-recordPulse" />
+            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-terracotta">
+              <span className="h-2 w-2 rounded-full bg-terracotta animate-recordPulse" />
               Recording
             </span>
           </div>
-          <div className="mt-3 h-px bg-ink-600" />
+          <div className="mt-3 h-px bg-charcoal/15" />
 
           {/* Title */}
-          <h1 className="mt-8 font-display text-[32px] font-medium text-linen">
+          <h1 className="mt-8 font-display text-[32px] font-medium text-charcoal">
             {recordingMemory.title}
           </h1>
 
           {/* Video / Audio player area */}
-          <div className="mt-6 overflow-hidden rounded-xl bg-ink-700 shadow-card">
-            <div className="relative aspect-video w-full bg-ink-800">
+          <div className="mt-6 overflow-hidden rounded-xl bg-white shadow-card">
+            <div className="relative aspect-video w-full bg-cream">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <p className="font-display text-sm text-mist-dim">
+                  <p className="font-display text-sm text-charcoal/50">
                     {recordingMemory.body}
                   </p>
                 </div>
               </div>
               {/* Fake player controls */}
-              <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 border-t border-ink-600 bg-ink-800/90 px-4 py-2.5">
-                <button type="button" className="text-mist hover:text-linen" aria-label="Previous">
+              <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 border-t border-charcoal/10 bg-white/90 px-4 py-2.5">
+                <button type="button" className="text-charcoal/50 hover:text-charcoal" aria-label="Previous">
                   <span className="text-xs">⏮</span>
                 </button>
-                <button type="button" className="text-ember hover:text-ember-hover" aria-label="Play">
+                <button type="button" className="text-terracotta hover:text-terracotta-dark" aria-label="Play">
                   <Play className="h-4 w-4" fill="currentColor" />
                 </button>
-                <button type="button" className="text-mist hover:text-linen" aria-label="Next">
+                <button type="button" className="text-charcoal/50 hover:text-charcoal" aria-label="Next">
                   <span className="text-xs">⏭</span>
                 </button>
-                <div className="h-1 flex-1 rounded-full bg-ink-600">
-                  <div className="h-full w-[40%] rounded-full bg-ember" />
+                <div className="h-1 flex-1 rounded-full bg-charcoal/15">
+                  <div className="h-full w-[40%] rounded-full bg-terracotta" />
                 </div>
-                <span className="font-mono text-xs text-mist-dim">
+                <span className="font-mono text-xs text-charcoal/40">
                   {formatDuration(Math.floor(elapsed * 0.4))} / {formatDuration(elapsed)}
                 </span>
               </div>
@@ -84,11 +84,11 @@ export default function RecordingScreen() {
           </div>
 
           {/* Recording control bar */}
-          <div className="mt-6 flex items-center gap-4 rounded-xl border border-ink-600 bg-ink-800 px-6 py-5">
+          <div className="mt-6 flex items-center gap-4 rounded-xl border border-charcoal/10 bg-white px-6 py-5">
             <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-ember animate-recordPulse" />
+              <span className="h-2 w-2 rounded-full bg-terracotta animate-recordPulse" />
             </span>
-            <span className="font-mono text-[28px] tabular-nums text-linen">
+            <span className="font-mono text-[28px] tabular-nums text-charcoal">
               {formatDuration(elapsed)}
             </span>
 
@@ -96,7 +96,7 @@ export default function RecordingScreen() {
               <button
                 type="button"
                 onClick={() => setIsPaused(!isPaused)}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink-600 text-mist transition hover:border-linen hover:text-linen"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/50 transition hover:border-charcoal hover:text-charcoal"
                 aria-label={isPaused ? 'Resume' : 'Pause'}
               >
                 {isPaused ? (
@@ -107,8 +107,8 @@ export default function RecordingScreen() {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/workspace')}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-linen text-ink transition hover:bg-linen-dim"
+                onClick={() => router.push('/workspace')}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-cream text-charcoal transition hover:bg-white"
                 aria-label="Stop recording"
               >
                 <Square className="h-4 w-4" fill="currentColor" />

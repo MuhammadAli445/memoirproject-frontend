@@ -22,37 +22,37 @@ export default function MemoryRow({ memory }: MemoryRowProps) {
   }
 
   return (
-    <div className="flex items-start gap-4 border-b border-ink-600 py-5 last:border-b-0">
+    <div className="flex items-start gap-4 border-b border-charcoal/10 py-5 last:border-b-0">
       {memory.type === 'voice' ? (
         <button
           type="button"
           onClick={toggle}
           disabled={!hasRealAudio}
           title={hasRealAudio ? (isPlaying ? 'Pause' : 'Play') : 'Preview unavailable in this demo'}
-          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-ember/15 text-ember transition hover:bg-ember/25 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-terracotta/15 text-terracotta transition hover:bg-terracotta/25 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isPlaying ? <Pause className="h-4 w-4" fill="currentColor" /> : <Play className="ml-0.5 h-4 w-4" fill="currentColor" />}
         </button>
       ) : (
-        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-ink-600 text-mist">
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-cream text-charcoal/50">
           <Icon className="h-4 w-4" strokeWidth={1.75} />
         </span>
       )}
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-display text-[17px] text-linen">{memory.title}</h3>
+          <h3 className="font-display text-[17px] text-charcoal">{memory.title}</h3>
           {memory.isDraft && (
-            <span className="rounded-full bg-ember/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ember">
+            <span className="rounded-full bg-terracotta/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-terracotta">
               Draft
             </span>
           )}
           {memory.type === 'voice' && (
-            <span className="text-xs text-mist-dim">{formatDuration(memory.audioDurationSeconds ?? 0)}</span>
+            <span className="text-xs text-charcoal/40">{formatDuration(memory.audioDurationSeconds ?? 0)}</span>
           )}
         </div>
-        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-mist">{memory.body}</p>
-        <p className="mt-2 text-xs text-mist-dim">
+        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-charcoal/60">{memory.body}</p>
+        <p className="mt-2 text-xs text-charcoal/40">
           {relativeTime(memory.createdAt)}
           {memory.location ? ` · ${memory.location}` : ''}
         </p>

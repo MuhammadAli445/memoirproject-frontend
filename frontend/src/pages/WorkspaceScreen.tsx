@@ -56,7 +56,7 @@ export default function WorkspaceScreen() {
   const dayGroups = groupByDay(memories)
 
   return (
-    <div className="flex min-h-screen bg-ink">
+    <div className="flex min-h-screen bg-cream">
       <Sidebar subject={subject} activeTab={activeTab} onTabChange={setActiveTab} onAddMemory={openNewMemory} />
 
       <main className="flex-1 overflow-y-auto px-10 py-10">
@@ -68,12 +68,12 @@ export default function WorkspaceScreen() {
             <button
               type="button"
               onClick={() => openDraft(draftMemory)}
-              className="mb-8 flex w-full items-center justify-between rounded-lg border border-ember/30 bg-ember/10 px-5 py-3.5 text-left transition hover:bg-ember/15"
+              className="mb-8 flex w-full items-center justify-between rounded-lg border border-terracotta/30 bg-terracotta/10 px-5 py-3.5 text-left transition hover:bg-terracotta/15"
             >
-              <span className="text-sm text-linen">
-                Continue where you left off — <span className="italic text-mist">{draftMemory.title}</span>
+              <span className="text-sm text-charcoal">
+                Continue where you left off — <span className="italic text-charcoal/60">{draftMemory.title}</span>
               </span>
-              <span className="text-sm font-medium text-ember">Continue →</span>
+              <span className="text-sm font-medium text-terracotta">Continue →</span>
             </button>
           )}
 
@@ -99,8 +99,8 @@ export default function WorkspaceScreen() {
 function SectionHeading({ title, count }: { title: string; count: number }) {
   return (
     <div className="mb-6 flex items-center justify-between">
-      <h2 className="font-display text-2xl text-linen">{title}</h2>
-      <span className="text-sm text-mist-dim">
+      <h2 className="font-display text-2xl text-charcoal">{title}</h2>
+      <span className="text-sm text-charcoal/50">
         {count} {count === 1 ? 'item' : 'items'}
       </span>
     </div>
@@ -109,15 +109,15 @@ function SectionHeading({ title, count }: { title: string; count: number }) {
 
 function EmptyRow({ label, onAction }: { label: string; onAction: () => void }) {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-dashed border-ink-600 py-14 text-center">
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-700">
-        <Sparkles className="h-4 w-4 text-ember" strokeWidth={1.75} />
+    <div className="flex flex-col items-center rounded-xl border border-dashed border-charcoal/20 py-14 text-center">
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-cream">
+        <Sparkles className="h-4 w-4 text-terracotta" strokeWidth={1.75} />
       </span>
-      <p className="mt-4 text-sm text-mist">{label}</p>
+      <p className="mt-4 text-sm text-charcoal/60">{label}</p>
       <button
         type="button"
         onClick={onAction}
-        className="mt-4 rounded-lg bg-ember px-5 py-2 text-sm font-medium text-white transition hover:bg-ember-hover"
+        className="mt-4 rounded-lg bg-terracotta px-5 py-2 text-sm font-medium text-cream transition hover:bg-terracotta-dark"
       >
         Add a memory
       </button>
@@ -167,10 +167,10 @@ function TimelineTab({
         dayGroups.map(([label, items]) => (
           <div key={label} className="mb-8">
             <div className="mb-3 flex items-center gap-4">
-              <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.1em] text-mist-dim">
+              <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
                 {label}
               </span>
-              <span className="h-px flex-1 bg-ink-600" />
+              <span className="h-px flex-1 bg-charcoal/15" />
             </div>
             {items.map((memory) => (
               <MemoryRow key={memory.id} memory={memory} />
@@ -186,16 +186,16 @@ function ContributorsTab() {
   return (
     <div>
       <SectionHeading title="Contributors" count={sampleContributors.length} />
-      <div className="divide-y divide-ink-600">
+      <div className="divide-y divide-charcoal/10">
         {sampleContributors.map((person) => (
           <div key={person.id} className="flex items-center justify-between py-4">
             <div>
-              <p className="text-[15px] text-linen">{person.name}</p>
-              <p className="text-sm text-mist-dim">{person.relationship}</p>
+              <p className="text-[15px] text-charcoal">{person.name}</p>
+              <p className="text-sm text-charcoal/50">{person.relationship}</p>
             </div>
             <span
               className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide ${
-                person.status === 'contributed' ? 'bg-ember/15 text-ember' : 'bg-ink-600 text-mist'
+                person.status === 'contributed' ? 'bg-terracotta/15 text-terracotta' : 'bg-cream text-charcoal/50'
               }`}
             >
               {person.status === 'contributed' ? 'Contributed' : 'Invited'}

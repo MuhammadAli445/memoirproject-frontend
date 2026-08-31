@@ -19,10 +19,10 @@ const NAV_ITEMS: { id: WorkspaceTab; label: string; icon: typeof BookOpen }[] = 
 
 export default function Sidebar({ subject, activeTab, onTabChange, onAddMemory }: SidebarProps) {
   return (
-    <aside className="flex h-screen w-[240px] flex-shrink-0 flex-col justify-between border-r border-ink-600 bg-ink-800 px-5 py-8">
+    <aside className="flex h-screen w-[240px] flex-shrink-0 flex-col justify-between border-r border-charcoal/10 bg-white px-5 py-8">
       <div>
-        <h1 className="font-display text-xl text-linen">{subject.name}</h1>
-        <p className="mt-0.5 text-sm text-mist-dim">
+        <h1 className="font-display text-xl text-charcoal">{subject.name}</h1>
+        <p className="mt-0.5 text-sm text-charcoal/50">
           {subject.birthYear} – {subject.deathYear}
         </p>
 
@@ -35,7 +35,7 @@ export default function Sidebar({ subject, activeTab, onTabChange, onAddMemory }
                 type="button"
                 onClick={() => onTabChange(id)}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[15px] transition ${
-                  active ? 'bg-ink-600 text-ember' : 'text-mist hover:bg-ink-700 hover:text-linen'
+                  active ? 'bg-cream text-terracotta' : 'text-charcoal/60 hover:bg-cream hover:text-charcoal'
                 }`}
               >
                 <Icon className="h-4 w-4" strokeWidth={1.75} />
@@ -49,7 +49,7 @@ export default function Sidebar({ subject, activeTab, onTabChange, onAddMemory }
       <button
         type="button"
         onClick={onAddMemory}
-        className="flex items-center justify-center gap-2 rounded-lg bg-ember px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-ember-hover"
+        className="flex items-center justify-center gap-2 rounded-lg bg-terracotta px-4 py-3 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark"
       >
         <Plus className="h-4 w-4" strokeWidth={2} />
         Add Memory

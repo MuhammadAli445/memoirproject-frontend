@@ -34,7 +34,7 @@ export default function ArchiveScreen() {
   })
 
   return (
-    <div className="flex min-h-screen bg-ink">
+    <div className="flex min-h-screen bg-cream">
       <Sidebar subject={subject} activeTab={activeTab} onTabChange={setActiveTab} onAddMemory={handleAddMemory} />
 
       <main className="flex-1 overflow-y-auto px-10 py-10">
@@ -44,15 +44,15 @@ export default function ArchiveScreen() {
           </div>
           {/* Header */}
           <div className="flex items-center justify-between">
-            <h1 className="font-display text-3xl text-linen">Archive</h1>
+            <h1 className="font-display text-3xl text-charcoal">Archive</h1>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-mist-dim">
+              <span className="text-sm text-charcoal/50">
                 {filteredMemories.length} {filteredMemories.length === 1 ? 'entry' : 'entries'} recorded
               </span>
               <button
                 type="button"
                 onClick={() => setShowFilter(!showFilter)}
-                className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-mist transition hover:text-linen"
+                className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-charcoal/50 transition hover:text-charcoal"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" strokeWidth={2} />
                 Filter
@@ -70,8 +70,8 @@ export default function ArchiveScreen() {
                   onClick={() => setFilter(f)}
                   className={`rounded-full px-3.5 py-1.5 text-xs font-medium capitalize transition ${
                     filter === f
-                      ? 'bg-ember text-white'
-                      : 'border border-ink-600 text-mist hover:border-ember hover:text-linen'
+                      ? 'bg-terracotta text-cream'
+                      : 'border border-charcoal/15 text-charcoal/60 hover:border-terracotta hover:text-charcoal'
                   }`}
                 >
                   {f}
@@ -87,7 +87,7 @@ export default function ArchiveScreen() {
             ))}
 
             {filteredMemories.length === 0 && (
-              <p className="py-16 text-center text-sm text-mist">No memories match this filter.</p>
+              <p className="py-16 text-center text-sm text-charcoal/50">No memories match this filter.</p>
             )}
           </div>
         </div>
@@ -108,11 +108,11 @@ function MemoryCard({ memory }: { memory: Memory }) {
   }
 
   return (
-    <div className="rounded-2xl bg-linen shadow-card overflow-hidden">
+    <div className="rounded-2xl bg-white shadow-card overflow-hidden">
       {memory.type === 'photo' && (
         <div className="px-8 pt-8">
-          <h2 className="font-display text-2xl text-cocoa">{memory.title}</h2>
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.1em] text-cocoa/50">
+          <h2 className="font-display text-2xl text-charcoal">{memory.title}</h2>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
             <span>{new Date(memory.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }).toUpperCase()}</span>
             {memory.location && (
               <>
@@ -122,9 +122,9 @@ function MemoryCard({ memory }: { memory: Memory }) {
             )}
           </div>
           {/* Photo */}
-          <div className="mt-4 overflow-hidden rounded-lg bg-ink-800">
+          <div className="mt-4 overflow-hidden rounded-lg bg-cream">
             <div className="flex aspect-video items-center justify-center">
-              <Camera className="h-8 w-8 text-mist" strokeWidth={1.2} />
+              <Camera className="h-8 w-8 text-charcoal/30" strokeWidth={1.2} />
             </div>
           </div>
         </div>
@@ -132,12 +132,12 @@ function MemoryCard({ memory }: { memory: Memory }) {
 
       {/* Audio player for voice/photo with audio */}
       {memory.audioDurationSeconds && (
-        <div className="mx-8 mt-4 rounded-lg border border-cocoa/10 bg-linen-dim/60 p-4">
+        <div className="mx-8 mt-4 rounded-lg border border-charcoal/10 bg-cream p-4">
           <div className="flex items-center gap-4">
             <button
               type="button"
               onClick={toggle}
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-cocoa/20 text-cocoa transition hover:bg-cocoa/5"
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-charcoal/15 text-charcoal transition hover:bg-white"
             >
               {isPlaying ? (
                 <Pause className="h-4 w-4" fill="currentColor" />
@@ -150,12 +150,12 @@ function MemoryCard({ memory }: { memory: Memory }) {
               {Array.from({ length: 30 }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-[3px] rounded-full bg-cocoa/30"
+                  className="w-[3px] rounded-full bg-charcoal/20"
                   style={{ height: `${Math.max(4, Math.random() * 24)}px` }}
                 />
               ))}
             </div>
-            <span className="flex-shrink-0 font-mono text-xs text-cocoa/50">
+            <span className="flex-shrink-0 font-mono text-xs text-charcoal/40">
               {formatDuration(memory.audioDurationSeconds)}
             </span>
           </div>
@@ -175,23 +175,23 @@ function MemoryCard({ memory }: { memory: Memory }) {
       <div className="px-8 py-6">
         {/* Quote / body */}
         {memory.type === 'photo' && memory.photoCaption ? (
-          <p className="font-display text-[15px] italic leading-relaxed text-cocoa/70">
+          <p className="font-display text-[15px] italic leading-relaxed text-charcoal/60">
             &ldquo;{memory.photoCaption}&rdquo;
           </p>
         ) : memory.type === 'text' && memory.isDraft ? (
-          <div className="rounded-lg border border-dashed border-cocoa/20 bg-linen-dim/40 p-4">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-cocoa/40">
+          <div className="rounded-lg border border-dashed border-charcoal/15 bg-cream p-4">
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
               <span>Draft</span>
               <span>·</span>
               <span>{relativeTime(memory.updatedAt ?? memory.createdAt)}</span>
             </div>
-            <p className="mt-3 text-[15px] leading-relaxed text-cocoa/60">
+            <p className="mt-3 text-[15px] leading-relaxed text-charcoal/60">
               {memory.body}
             </p>
           </div>
         ) : memory.type === 'voice' && !memory.audioDurationSeconds ? (
-          <div className="rounded-lg bg-linen-dim/40 p-4">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-cocoa/40">
+          <div className="rounded-lg bg-cream p-4">
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
               <Mic className="h-3.5 w-3.5" strokeWidth={2} />
               <span>Voice Note</span>
               <span>·</span>
@@ -199,11 +199,9 @@ function MemoryCard({ memory }: { memory: Memory }) {
             </div>
           </div>
         ) : (
-          <p className="text-[15px] leading-relaxed text-cocoa/70">{memory.body}</p>
+          <p className="text-[15px] leading-relaxed text-charcoal/60">{memory.body}</p>
         )}
       </div>
     </div>
   )
 }
-
-
