@@ -27,7 +27,6 @@ export interface OnboardingState {
 export const ONBOARDING_STEPS = [
   "begin",
   "identity",
-  "feeling",
   "details",
   "preview",
   "ready",
