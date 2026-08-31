@@ -43,7 +43,11 @@ function OnboardingFlowInner() {
         <CreateIdentity onBack={() => goTo(0)} onContinue={() => goTo(2)} />
       )}
       {step === 2 && (
-        <AddDetails onSkip={() => goTo(3)} onContinue={() => goTo(3)} />
+        <AddDetails
+          onBack={() => goTo(1)}
+          onSkip={() => goTo(3)}
+          onContinue={() => goTo(3)}
+        />
       )}
       {step === 3 && (
         <FinalPreview onEdit={() => goTo(2)} onLooksGood={() => goTo(4)} />
