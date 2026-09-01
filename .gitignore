@@ -1,14 +1,26 @@
 # Virtual environment
 venv/
+.venv/
 
 # Environment variables / secrets
 .env
 
-# Python cache
+# Python cache & testing
 __pycache__/
 *.py[cod]
+.pytest_cache/
+*.db
+test_*.db
 
-# macOS
+# File Storage & Uploads
+uploads/
+test_uploads/
+test_*_uploads/
+
+# macOS / OS artifacts
 .DS_Store
+Thumbs.db
+
+# Frontend
 /node_modules
 package-lock.json

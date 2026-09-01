@@ -1,16 +1,11 @@
-from pydantic import NonNegativeInt
+from typing import Optional, Dict, Any
 import jwt
 from datetime import datetime, timedelta, timezone
-import dotenv
-import os
-from dotenv import load_dotenv
+from app.core.config import settings
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-ALGORITHM = os.getenv("JWT_ALGORITHM")
-expire_time = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 def create_access_token(user_id: int) -> str:
-    expire = datetime.now(timezone.utc) + timedelta(minutes=expire_time)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     payload = {
         "sub": str(user_id),
@@ -19,22 +14,20 @@ def create_access_token(user_id: int) -> str:
 
     token = jwt.encode(
         payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM
+        settings.JWT_SECRET_KEY,
+        algorithm=settings.JWT_ALGORITHM
     )
 
     return token
 
 
-def decode_access_token(token: str):
+def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
     try:
         payload = jwt.decode(
             token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM]
         )
-
         return payload
-
-    except jwt.InvalidTokenError:
-        return NonNegativeInt
+    except (jwt.PyJWTError, Exception):
+        return None

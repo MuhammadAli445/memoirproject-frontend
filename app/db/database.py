@@ -1,14 +1,16 @@
 import os
-import dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker
+from app.core.config import settings
 
-dotenv.load_dotenv()
+DATABASE_URL = settings.DATABASE_URL
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+connect_args = {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
 
-# 1. Create the engine properly
-engine = create_engine(DATABASE_URL, echo=True)
+# Create engine
+engine = create_engine(DATABASE_URL, echo=False, connect_args=connect_args)
 
 # Base class for models
 Base = declarative_base()
@@ -16,9 +18,9 @@ Base = declarative_base()
 # Session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def check_db_connection():
     try:
-        # 2. Connect using the engine object and execute text SQL
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
             print("✅ Database connection successful!")
@@ -27,6 +29,6 @@ def check_db_connection():
         print(f"❌ Database connection failed: {e}")
         return False
 
-# 3. Add this block to allow running directly from terminal
+
 if __name__ == "__main__":
     check_db_connection()

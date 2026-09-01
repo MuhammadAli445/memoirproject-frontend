@@ -1,22 +1,32 @@
 import os
 import tempfile
-import assemblyai as aai
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 
+from app.core.config import settings
+
 router = APIRouter(prefix="/speech", tags=["Speech To Text"])
 
-ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
 
 class TranscriptionResponse(BaseModel):
     text: str
 
+
 @router.post("/transcribe", response_model=TranscriptionResponse)
 async def transcribe_audio(file: UploadFile = File(...)):
-    if not ASSEMBLYAI_API_KEY:
+    assemblyai_key = settings.ASSEMBLYAI_API_KEY or os.getenv("ASSEMBLYAI_API_KEY")
+    if not assemblyai_key:
         raise HTTPException(
             status_code=500,
             detail="ASSEMBLYAI_API_KEY is not configured on the server."
+        )
+
+    try:
+        import assemblyai as aai
+    except ImportError:
+        raise HTTPException(
+            status_code=500,
+            detail="assemblyai package is not installed on the server."
         )
 
     # Read uploaded file content
@@ -32,7 +42,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
             temp_file.write(contents)
             temp_file_path = temp_file.name
 
-        aai.settings.api_key = ASSEMBLYAI_API_KEY
+        aai.settings.api_key = assemblyai_key
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(temp_file_path)
 
