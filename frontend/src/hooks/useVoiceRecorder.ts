@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export interface RecordingResult {
   url: string
   durationSeconds: number
+  blob: Blob
 }
 
 export type RecordingPhase = 'idle' | 'recording' | 'review'
@@ -103,7 +104,7 @@ export function useVoiceRecorder(): UseVoiceRecorder {
         const url = URL.createObjectURL(blob)
         clearTimer()
         releaseStream()
-        setResult({ url, durationSeconds: elapsedSeconds })
+        setResult({ url, durationSeconds: elapsedSeconds, blob })
         setPhase('review')
         resolve()
       }

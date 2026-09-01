@@ -99,15 +99,40 @@ export default function MemoryComposer({
     onSave(buildMemory(audioResult))
   }
 
-  const handleRecordingConfirm = (result: RecordingResult) => {
+  const handleRecordingConfirm = (result: RecordingResult, transcribedText?: string) => {
     setAudioResult(result)
+    if (transcribedText) {
+      setBody((prev) => (prev ? `${prev}\n\n${transcribedText}` : transcribedText))
+    }
     setIsRecordingOpen(false)
   }
 
-  const handleRecordingSaveNow = (result: RecordingResult | null) => {
+  const handleRecordingSaveNow = (result: RecordingResult | null, transcribedText?: string) => {
     setIsRecordingOpen(false)
     if (result) setAudioResult(result)
-    onSave(buildMemory(result ?? audioResult))
+    const finalBody = transcribedText
+      ? body ? `${body}\n\n${transcribedText}` : transcribedText
+      : body
+
+    const resolvedType: MemoryType = (result || audioResult) ? 'voice' : photoDataUrl ? 'photo' : 'text'
+    const resolvedTitle =
+      title.trim() ||
+      `Untitled memory — ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`
+
+    onSave({
+      id: draft?.id ?? crypto.randomUUID(),
+      type: resolvedType,
+      title: resolvedTitle,
+      body: finalBody,
+      createdAt: draft?.createdAt ?? new Date().toISOString(),
+      updatedAt: draft ? new Date().toISOString() : undefined,
+      isDraft: false,
+      location: location.trim() || undefined,
+      photoDataUrl,
+      photoCaption,
+      audioUrl: (result || audioResult)?.url ?? null,
+      audioDurationSeconds: (result || audioResult)?.durationSeconds,
+    })
   }
 
   const statusLabel = hasContent ? 'READY TO SAVE' : 'ADD A FEW DETAILS'

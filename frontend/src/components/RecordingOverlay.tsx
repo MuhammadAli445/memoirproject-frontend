@@ -1,21 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, Pause, Play, Square, Trash2 } from 'lucide-react'
+import { Check, Loader2, Pause, Play, Square, Trash2 } from 'lucide-react'
 import { useVoiceRecorder, type RecordingResult } from '../hooks/useVoiceRecorder'
 import { formatDuration } from '../utils/format'
+import { transcribeAudioBlob } from '../utils/speechToText'
 
 interface RecordingOverlayProps {
   title: string
   bodyPreview: string
   onCancel: () => void
-  onConfirm: (result: RecordingResult) => void
+  onConfirm: (result: RecordingResult, transcribedText?: string) => void
   /** Top-bar "Save" shortcut — stops (if needed) and hands back whatever was captured, or null. */
-  onSaveNow: (result: RecordingResult | null) => void
+  onSaveNow: (result: RecordingResult | null, transcribedText?: string) => void
 }
 
 export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfirm, onSaveNow }: RecordingOverlayProps) {
   const recorder = useVoiceRecorder()
   const startedRef = useRef(false)
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const [transcribeError, setTranscribeError] = useState<string | null>(null)
   const previewAudioRef = useRef<HTMLAudioElement>(null)
 
   // Auto-start as soon as the overlay appears — matches tapping the mic in the composer.
@@ -35,22 +38,47 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
     await recorder.stopAndReview()
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const result = recorder.confirm()
-    if (result) onConfirm(result)
+    if (!result) return
+
+    let text = ''
+    if (result.blob) {
+      setIsTranscribing(true)
+      setTranscribeError(null)
+      try {
+        text = await transcribeAudioBlob(result.blob)
+      } catch (err: any) {
+        console.error('Transcription error:', err)
+        setTranscribeError('Failed to convert speech to text, but recording was kept.')
+      } finally {
+        setIsTranscribing(false)
+      }
+    }
+    onConfirm(result, text)
   }
 
   const handleSaveShortcut = async () => {
+    let result: RecordingResult | null = null
     if (recorder.phase === 'recording') {
       await recorder.stopAndReview()
-      const result = recorder.confirm()
-      onSaveNow(result)
+      result = recorder.confirm()
     } else if (recorder.phase === 'review') {
-      const result = recorder.confirm()
-      onSaveNow(result)
-    } else {
-      onSaveNow(null)
+      result = recorder.confirm()
     }
+
+    let text = ''
+    if (result?.blob) {
+      setIsTranscribing(true)
+      try {
+        text = await transcribeAudioBlob(result.blob)
+      } catch (err) {
+        console.error('Transcription error:', err)
+      } finally {
+        setIsTranscribing(false)
+      }
+    }
+    onSaveNow(result, text)
   }
 
   const togglePreview = () => {
@@ -138,19 +166,22 @@ export default function RecordingOverlay({ title, bodyPreview, onCancel, onConfi
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={recorder.phase !== 'review'}
+              disabled={recorder.phase !== 'review' || isTranscribing}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-cream text-terracotta transition hover:bg-cream disabled:cursor-not-allowed disabled:text-charcoal/30 disabled:hover:bg-cream"
               aria-label="Confirm recording"
             >
-              <Check className="h-5 w-5" strokeWidth={2.25} />
+              {isTranscribing ? <Loader2 className="h-5 w-5 animate-spin text-terracotta" /> : <Check className="h-5 w-5" strokeWidth={2.25} />}
             </button>
           </div>
 
           <p className="text-xs text-charcoal/40">
-            {recorder.phase === 'recording'
+            {isTranscribing
+              ? 'Converting speech to text via AssemblyAI...'
+              : recorder.phase === 'recording'
               ? 'Tap the square to stop.'
               : 'Listen back, then confirm or discard.'}
           </p>
+          {transcribeError && <p className="text-xs text-red-500 font-medium">{transcribeError}</p>}
         </div>
       </div>
 
