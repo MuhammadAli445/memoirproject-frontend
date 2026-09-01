@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ActionRow } from "../components/ActionRow";
+import { AudioRecorder } from "../components/AudioRecorder";
 import { useOnboarding } from "../state/onboarding-context";
 
 interface AddDetailsProps {
@@ -46,7 +47,7 @@ export function AddDetails({ onBack, onSkip, onContinue }: AddDetailsProps) {
               You can skip anything you&apos;re not ready to add.
             </p>
 
-            <div className="mt-8 w-full text-left">
+            <div className="mt-8 w-full text-left flex flex-col gap-3">
               <label className="flex flex-col gap-2 text-sm font-medium text-charcoal">
                 Short Description
                 <textarea
@@ -57,6 +58,12 @@ export function AddDetails({ onBack, onSkip, onContinue }: AddDetailsProps) {
                   className="resize-none rounded-lg border border-charcoal/15 bg-white px-4 py-3 text-sm font-normal text-charcoal placeholder:text-charcoal/35 focus:border-terracotta focus:outline-none"
                 />
               </label>
+
+              <AudioRecorder
+                onTranscribed={(text) =>
+                  setDescription(state.description ? `${state.description} ${text}` : text)
+                }
+              />
             </div>
 
             <div className="mt-8 w-full">
@@ -135,13 +142,19 @@ export function AddDetails({ onBack, onSkip, onContinue }: AddDetailsProps) {
               You can skip anything you&apos;re not ready to add.
             </p>
 
-            <div className="mt-8 w-full text-left">
+            <div className="mt-8 w-full text-left flex flex-col gap-3">
               <textarea
                 value={state.familyHopes}
                 onChange={(e) => setFamilyHopes(e.target.value)}
                 placeholder="Stories of their travels, lessons they taught, recipes…"
                 rows={5}
                 className="resize-none rounded-lg border border-charcoal/15 bg-white px-4 py-3 text-sm font-normal text-charcoal placeholder:text-charcoal/35 focus:border-terracotta focus:outline-none"
+              />
+
+              <AudioRecorder
+                onTranscribed={(text) =>
+                  setFamilyHopes(state.familyHopes ? `${state.familyHopes} ${text}` : text)
+                }
               />
             </div>
 
