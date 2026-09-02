@@ -26,7 +26,7 @@ function OnboardingFlowInner() {
       totalSteps={TOTAL_STEPS}
       currentStep={STEP_DOTS[step]}
       onBack={step > 0 ? () => goTo(step - 1) : undefined}
-      onClose={() => router.push("/dashboard")}
+      onClose={() => router.push("/login")}
     />
   );
 
@@ -36,7 +36,7 @@ function OnboardingFlowInner() {
       {step === 0 && (
         <BeginIntro
           onBegin={() => goTo(1)}
-          onSkip={() => router.push("/dashboard")}
+          onSkip={() => router.push("/login")}
         />
       )}
       {step === 1 && (
@@ -54,14 +54,14 @@ function OnboardingFlowInner() {
       )}
       {step === 4 && (
         <MemoirReady
-          onGoToMemoir={() => router.push("/dashboard")}
-          onInviteLater={() => router.push("/dashboard")}
+          onGoToMemoir={() => goTo(5)}
+          onInviteLater={() => goTo(5)}
         />
       )}
       {step === 5 && (
         <CreateAccount
           onBack={() => goTo(4)}
-          onClose={() => router.push("/dashboard")}
+          onClose={() => router.push("/login")}
           onCreateAccount={() => {
             // Signup already succeeded and stored session tokens;
             // clear the anonymous onboarding state and continue.
