@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { login, signup } from "@/lib/auth-api";
+import { useAuth } from "@/context/AuthContext";
 
 interface CreateAccountProps {
   onBack: () => void;
@@ -11,6 +12,7 @@ interface CreateAccountProps {
 }
 
 export function CreateAccount({ onBack, onClose, onCreateAccount }: CreateAccountProps) {
+  const { refreshUser } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,7 @@ export function CreateAccount({ onBack, onClose, onCreateAccount }: CreateAccoun
     try {
       await signup(name, email, password);
       await login(email, password);
+      await refreshUser();
       onCreateAccount({ name, email, password });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
