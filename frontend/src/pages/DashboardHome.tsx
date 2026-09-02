@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Camera, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Users } from 'lucide-react'
+import { BookOpen, Calendar, Camera, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Sparkles, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import BackButton from '../components/BackButton'
 import { useMemories } from '../context/MemoryContext'
@@ -55,32 +55,23 @@ export default function DashboardHome() {
           </nav>
         </div>
 
-        <div>
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => router.push('/book')}
+            className="flex items-center justify-center gap-2 rounded-lg border border-terracotta/30 px-4 py-3 text-sm font-semibold text-terracotta transition hover:bg-terracotta/10"
+          >
+            <Sparkles className="h-4 w-4" strokeWidth={2} />
+            Preview Memoir
+          </button>
           <button
             type="button"
             onClick={() => router.push('/workspace')}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-terracotta px-4 py-3 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark"
+            className="flex items-center justify-center gap-2 rounded-lg bg-terracotta px-4 py-3 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark"
           >
             <Plus className="h-4 w-4" strokeWidth={2} />
             Add Memory
           </button>
-
-          {user && (
-            <div className="mt-4 flex items-center justify-between border-t border-charcoal/10 pt-4">
-              <div className="min-w-0 flex-1 pr-2">
-                <p className="truncate text-xs font-semibold text-charcoal">{user.full_name}</p>
-                <p className="truncate text-[11px] text-charcoal/50">{user.email}</p>
-              </div>
-              <button
-                type="button"
-                onClick={logout}
-                title="Log out"
-                className="rounded p-1 text-charcoal/50 hover:bg-cream hover:text-charcoal transition-colors"
-              >
-                <LogOut className="h-4 w-4" strokeWidth={1.75} />
-              </button>
-            </div>
-          )}
         </div>
       </aside>
 

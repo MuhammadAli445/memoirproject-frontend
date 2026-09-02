@@ -32,6 +32,37 @@
   --color-cocoa: #2B2118;
   --color-mist: #B9AFA2;
   --color-mist-dim: #7C7268;
+
+  /* Heritage & Heart — book reader design system (see DESIGN.md) */
+  --font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-book-sans: 'Source Sans 3', var(--font-geist-sans), Arial, Helvetica, sans-serif;
+
+  --color-book-surface: #fcf9f8;
+  --color-book-surface-dim: #dcd9d9;
+  --color-book-surface-bright: #fcf9f8;
+  --color-book-surface-container-lowest: #ffffff;
+  --color-book-surface-container-low: #f6f3f2;
+  --color-book-surface-container: #f0eded;
+  --color-book-surface-container-high: #eae7e7;
+  --color-book-surface-container-highest: #e4e2e1;
+  --color-book-on-surface: #1b1c1c;
+  --color-book-on-surface-variant: #54433d;
+  --color-book-inverse-surface: #303030;
+  --color-book-inverse-on-surface: #f3f0f0;
+  --color-book-outline: #87736b;
+  --color-book-outline-variant: #d9c2b9;
+  --color-book-primary: #8f4928;
+  --color-book-on-primary: #ffffff;
+  --color-book-primary-container: #ad603e;
+  --color-book-on-primary-container: #fffbff;
+  --color-book-secondary: #6a5c4e;
+  --color-book-on-secondary: #ffffff;
+  --color-book-secondary-container: #f3dfce;
+  --color-book-on-secondary-container: #706254;
+  --color-book-tertiary: #8e4927;
+  --color-book-on-tertiary: #ffffff;
+  --color-book-tertiary-container: #ac613d;
+  --color-book-on-tertiary-container: #fffbff;
 }
 
 body {
