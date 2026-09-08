@@ -63,6 +63,50 @@
   --color-book-on-tertiary: #ffffff;
   --color-book-tertiary-container: #ac613d;
   --color-book-on-tertiary-container: #fffbff;
+
+  /* The Heirloom Chronicle — memoir access & sharing design system (see DESIGN.md) */
+  --font-heirloom-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --font-heirloom-sans: 'Manrope', var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-heirloom-mono: 'JetBrains Mono', var(--font-geist-mono), 'Courier New', monospace;
+
+  --color-heirloom-bg-page: #F5F0EB;
+  --color-heirloom-bg-card: #FFFFFF;
+  --color-heirloom-bg-card-alt: #FAF7F4;
+  --color-heirloom-surface-container-low: #f6f3f2;
+  --color-heirloom-surface-container: #f0eded;
+  --color-heirloom-surface-container-high: #eae7e7;
+  --color-heirloom-surface-container-highest: #e5e2e1;
+
+  --color-heirloom-primary: #B8622F;
+  --color-heirloom-primary-hover: #9E5225;
+  --color-heirloom-primary-light: rgba(184, 98, 47, 0.08);
+  --color-heirloom-primary-container: #a85324;
+  --color-heirloom-on-primary: #ffffff;
+  --color-heirloom-on-primary-container: #ffe8df;
+
+  --color-heirloom-secondary: #5f5e5c;
+  --color-heirloom-secondary-container: #e2dfdc;
+  --color-heirloom-tertiary-fixed: #e7e1db;
+  --color-heirloom-gold-accent: #D4A373;
+
+  --color-heirloom-text-primary: #1F1F1F;
+  --color-heirloom-text-secondary: #6B6B6B;
+  --color-heirloom-text-tertiary: #9A9A9A;
+
+  --color-heirloom-border: #E8E2DC;
+  --color-heirloom-border-focus: #B8622F;
+  --color-heirloom-outline-variant: #dbc1b6;
+
+  --color-heirloom-danger: #C0392B;
+  --color-heirloom-danger-hover: #A93226;
+  --color-heirloom-danger-light: rgba(192, 57, 43, 0.08);
+
+  --color-heirloom-success: #2E7D32;
+  --color-heirloom-success-light: rgba(46, 125, 50, 0.08);
+
+  --color-heirloom-overlay: rgba(31, 31, 31, 0.40);
+  --color-heirloom-inverse-surface: #303030;
+  --color-heirloom-inverse-on-surface: #f3f0ef;
 }
 
 body {

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Sidebar from '../components/Sidebar'
 import BackButton from '../components/BackButton'
 import { useMemories } from '../context/MemoryContext'
-import { subject } from '../data/sampleMemories'
+import { useSubject } from '../data/subject'
 import { formatDuration, fullDateUpper } from '../utils/format'
 import type { WorkspaceTab } from '../components/Sidebar'
 import type { Memory } from '../types'
@@ -12,6 +12,7 @@ import type { Memory } from '../types'
 export default function RecordingScreen() {
   const router = useRouter()
   const { memories } = useMemories()
+  const subject = useSubject()
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('voiceNotes')
   const [isPaused, setIsPaused] = useState(false)
   const [elapsed, setElapsed] = useState(194)

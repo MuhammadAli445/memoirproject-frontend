@@ -24,8 +24,8 @@ export interface Fragment {
 
 export interface Subject {
   name: string
-  birthYear: number
-  deathYear: number
+  birthYear?: number
+  deathYear?: number
 }
 
 export interface Contributor {

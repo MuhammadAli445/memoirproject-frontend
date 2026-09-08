@@ -1,9 +1,10 @@
-import { BookOpen, Calendar, Camera, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Sparkles, Users } from 'lucide-react'
+import { BookOpen, Calendar, Camera, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Share2, Sparkles, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import BackButton from '../components/BackButton'
 import { useMemories } from '../context/MemoryContext'
 import { useAuth } from '../context/AuthContext'
-import { subject } from '../data/sampleMemories'
+import { useSubject } from '../data/subject'
+import { memoirMeta } from '../data/heirloom'
 import { relativeTime } from '../utils/format'
 import type { Memory } from '../types'
 
@@ -22,6 +23,7 @@ export default function DashboardHome() {
   const router = useRouter()
   const { memories } = useMemories()
   const { user, logout } = useAuth()
+  const subject = useSubject()
 
   const recentMemories = memories.slice(0, 3)
   const hasMemories = memories.length > 0
@@ -35,9 +37,11 @@ export default function DashboardHome() {
 
           <div className="mt-10">
             <h1 className="font-display text-[22px] font-medium text-charcoal">{subject.name}</h1>
-            <p className="mt-0.5 text-sm text-charcoal/50">
-              {subject.birthYear} – {subject.deathYear}
-            </p>
+            {subject.birthYear && (
+              <p className="mt-0.5 text-sm text-charcoal/50">
+                {subject.birthYear} – {subject.deathYear ?? 'Present'}
+              </p>
+            )}
           </div>
 
           <nav className="mt-10 flex flex-col gap-1">
@@ -63,6 +67,14 @@ export default function DashboardHome() {
           >
             <Sparkles className="h-4 w-4" strokeWidth={2} />
             Preview Memoir
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push(`/m/${memoirMeta.slug}/manage`)}
+            className="flex items-center justify-center gap-2 rounded-lg border border-charcoal/15 px-4 py-3 text-sm font-semibold text-charcoal/70 transition hover:border-terracotta/30 hover:text-terracotta"
+          >
+            <Share2 className="h-4 w-4" strokeWidth={2} />
+            Manage Sharing
           </button>
           <button
             type="button"
@@ -92,7 +104,7 @@ export default function DashboardHome() {
             </div>
             {/* Caption plate */}
             <div className="absolute -bottom-4 left-1/2 w-[85%] -translate-x-1/2 rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <p className="text-[11px] text-charcoal/50">{subject.name} · 1962 Archive</p>
+              <p className="text-[11px] text-charcoal/50">{subject.name} · Family Archive</p>
             </div>
           </div>
 
@@ -100,9 +112,11 @@ export default function DashboardHome() {
           <h2 className="mt-12 font-display text-[42px] font-medium leading-tight text-charcoal">
             {subject.name}
           </h2>
-          <p className="mt-1 font-display text-xl italic text-charcoal/50">
-            {subject.birthYear} – {subject.deathYear}
-          </p>
+          {subject.birthYear && (
+            <p className="mt-1 font-display text-xl italic text-charcoal/50">
+              {subject.birthYear} – {subject.deathYear ?? 'Present'}
+            </p>
+          )}
 
           <div className="mx-auto mt-6 h-px w-16 bg-charcoal/15" />
 

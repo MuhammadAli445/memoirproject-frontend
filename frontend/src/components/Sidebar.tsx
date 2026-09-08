@@ -22,9 +22,11 @@ export default function Sidebar({ subject, activeTab, onTabChange, onAddMemory }
     <aside className="flex h-screen w-[240px] flex-shrink-0 flex-col justify-between border-r border-charcoal/10 bg-white px-5 py-8">
       <div>
         <h1 className="font-display text-xl text-charcoal">{subject.name}</h1>
-        <p className="mt-0.5 text-sm text-charcoal/50">
-          {subject.birthYear} – {subject.deathYear}
-        </p>
+        {subject.birthYear && (
+          <p className="mt-0.5 text-sm text-charcoal/50">
+            {subject.birthYear} – {subject.deathYear ?? 'Present'}
+          </p>
+        )}
 
         <nav className="mt-10 flex flex-col gap-1">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => {

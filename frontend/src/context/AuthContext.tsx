@@ -25,6 +25,7 @@ const PUBLIC_PATHS = [
   "/forgot-password",
   "/reset-password",
   "/onboarding",
+  "/m",
 ];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

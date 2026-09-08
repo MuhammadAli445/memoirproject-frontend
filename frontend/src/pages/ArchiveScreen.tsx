@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import Sidebar from '../components/Sidebar'
 import BackButton from '../components/BackButton'
 import { useMemories } from '../context/MemoryContext'
-import { subject } from '../data/sampleMemories'
+import { useSubject } from '../data/subject'
 import { formatDuration, relativeTime } from '../utils/format'
 import type { WorkspaceTab } from '../components/Sidebar'
 import type { Memory, MemoryType } from '../types'
@@ -20,6 +20,7 @@ const typeIcon: Record<MemoryType, typeof FileText> = {
 export default function ArchiveScreen() {
   const router = useRouter()
   const { memories } = useMemories()
+  const subject = useSubject()
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('memories')
   const [filter, setFilter] = useState<FilterType>('all')
   const [showFilter, setShowFilter] = useState(false)

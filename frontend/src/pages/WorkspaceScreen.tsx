@@ -5,7 +5,8 @@ import Sidebar, { type WorkspaceTab } from '../components/Sidebar'
 import MemoryRow from '../components/MemoryRow'
 import MemoryComposer from '../components/MemoryComposer'
 import { useMemories } from '../context/MemoryContext'
-import { sampleContributors, subject } from '../data/sampleMemories'
+import { sampleContributors } from '../data/sampleMemories'
+import { useSubject } from '../data/subject'
 import type { Memory } from '../types'
 import { groupByDay } from '../utils/format'
 
@@ -13,6 +14,7 @@ export default function WorkspaceScreen() {
   const navState = null
 
   const { memories, addMemory, updateMemory } = useMemories()
+  const subject = useSubject()
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('memories')
 
   const [isComposerOpen, setIsComposerOpen] = useState(false)

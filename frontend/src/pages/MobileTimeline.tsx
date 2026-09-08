@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Camera, Mic, MoreVertical, Pause, Play, User } from 'lucide-react'
 import BackButton from '../components/BackButton'
-import { subject } from '../data/sampleMemories'
+import { useSubject } from '../data/subject'
 import { formatDuration, shortDate } from '../utils/format'
 import type { Memory } from '../types'
 
@@ -29,6 +29,7 @@ const mobileMemories: Memory[] = [
 ]
 
 export default function MobileTimeline() {
+  const subject = useSubject()
   return (
     <div className="mx-auto max-w-md min-h-screen bg-cream">
       {/* Mobile header */}

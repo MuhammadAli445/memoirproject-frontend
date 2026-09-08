@@ -9,7 +9,8 @@ import {
 } from "react";
 import type { Mood, OnboardingState } from "../types/onboarding.types";
 
-const STORAGE_KEY = "memoir-onboarding-state";
+export const ONBOARDING_STORAGE_KEY = "memoir-onboarding-state";
+const STORAGE_KEY = ONBOARDING_STORAGE_KEY;
 
 const initialState: OnboardingState = {
   step: 0,
