@@ -43,16 +43,16 @@ export default function MemoryRow({ memory }: MemoryRowProps) {
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-display text-[17px] text-charcoal">{memory.title}</h3>
           {memory.isDraft && (
-            <span className="rounded-full bg-terracotta/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-terracotta">
+            <span className="rounded-full bg-terracotta/15 px-2.5 py-0.5 text-sm font-semibold uppercase tracking-wide text-terracotta">
               Draft
             </span>
           )}
           {memory.type === 'voice' && (
-            <span className="text-xs text-charcoal/40">{formatDuration(memory.audioDurationSeconds ?? 0)}</span>
+            <span className="text-sm text-charcoal/40">{formatDuration(memory.audioDurationSeconds ?? 0)}</span>
           )}
         </div>
         <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-charcoal/60">{memory.body}</p>
-        <p className="mt-2 text-xs text-charcoal/40">
+        <p className="mt-2 text-sm text-charcoal/40">
           {relativeTime(memory.createdAt)}
           {memory.location ? ` · ${memory.location}` : ''}
         </p>

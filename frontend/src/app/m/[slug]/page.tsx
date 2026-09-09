@@ -24,7 +24,7 @@ import {
   X,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { chapterOne, initialReflections, memoirMeta, type Reflection } from '@/data/heirloom'
+import { useHeirloomData, type Reflection } from '@/data/heirloom'
 import { useHeirloomToast, HeirloomToast } from '@/components/heirloom/HeirloomToast'
 
 function initialsOf(name: string): string {
@@ -42,8 +42,9 @@ function initialsOf(name: string): string {
 export default function PublicMemoirViewPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const router = useRouter()
+  const { memoirMeta, chapterOne, initialReflections } = useHeirloomData()
   const { user } = useAuth()
-  const { toast, showToast } = useHeirloomToast()
+  const { toast, showToast, hideToast } = useHeirloomToast()
 
   const [suggestOpen, setSuggestOpen] = useState(false)
   const [suggestName, setSuggestName] = useState('')
@@ -114,19 +115,19 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
             </span>
           </Link>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-3 rounded-full border border-heirloom-border/70 bg-heirloom-surface-container-low/80 px-4 py-1 text-xs text-heirloom-text-secondary shadow-sm">
+            <div className="flex items-center gap-3 rounded-full border border-heirloom-border/70 bg-heirloom-surface-container-low/80 px-4 py-1 text-sm text-heirloom-text-secondary shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-600" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-heirloom-text-secondary">
+              <span className="text-sm font-semibold uppercase tracking-wider text-heirloom-text-secondary">
                 Public Heirloom Edition
               </span>
               <span className="text-heirloom-text-tertiary">•</span>
-              <span className="font-heirloom-serif text-[14px] italic text-heirloom-text-primary">
+              <span className="font-heirloom-serif text-base italic text-heirloom-text-primary">
                 {memoirMeta.volume}: {memoirMeta.title}
               </span>
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border px-3.5 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-colors hover:border-heirloom-primary/40 hover:text-heirloom-primary"
+              className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border px-3.5 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-colors hover:border-heirloom-primary/40 hover:text-heirloom-primary"
             >
               <Home className="h-4 w-4" strokeWidth={2} />
               Dashboard
@@ -143,14 +144,14 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
               <BookOpen className="h-[19px] w-[19px]" strokeWidth={1.75} />
             </div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-heirloom-primary">
+              <span className="text-sm font-bold uppercase tracking-wider text-heirloom-primary">
                 Shared Family Memoir
               </span>
-              <span className="text-xs text-heirloom-text-tertiary">•</span>
-              <span className="text-xs font-medium text-heirloom-text-secondary">EST. {memoirMeta.establishedYear}</span>
-              <span className="text-xs text-heirloom-text-tertiary">•</span>
-              <span className="text-xs font-medium text-heirloom-text-secondary">Chapter 1 of {memoirMeta.chapterCount}</span>
-              <span className="text-xs text-heirloom-text-tertiary">•</span>
+              <span className="text-sm text-heirloom-text-tertiary">•</span>
+              <span className="text-sm font-medium text-heirloom-text-secondary">EST. {memoirMeta.establishedYear}</span>
+              <span className="text-sm text-heirloom-text-tertiary">•</span>
+              <span className="text-sm font-medium text-heirloom-text-secondary">Chapter 1 of {memoirMeta.chapterCount}</span>
+              <span className="text-sm text-heirloom-text-tertiary">•</span>
               <span className="text-sm font-semibold tracking-tight text-heirloom-text-primary">
                 {memoirMeta.title} • {memoirMeta.subtitle}
               </span>
@@ -160,7 +161,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
             <button
               type="button"
               onClick={() => router.push(`/m/${slug}/search`)}
-              className="flex items-center gap-1.5 rounded-full bg-heirloom-surface-container-low px-3.5 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-surface-container hover:text-heirloom-text-primary"
+              className="flex items-center gap-1.5 rounded-full bg-heirloom-surface-container-low px-3.5 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-surface-container hover:text-heirloom-text-primary"
             >
               <Search className="h-[15px] w-[15px]" strokeWidth={2} />
               <span>Search Memoir</span>
@@ -168,14 +169,14 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
             <button
               type="button"
               onClick={handleCopyLink}
-              className="flex items-center gap-1.5 rounded-full bg-heirloom-surface-container-low px-3.5 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-surface-container hover:text-heirloom-text-primary"
+              className="flex items-center gap-1.5 rounded-full bg-heirloom-surface-container-low px-3.5 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-surface-container hover:text-heirloom-text-primary"
             >
               <Share2 className="h-[15px] w-[15px]" strokeWidth={2} />
               <span>Copy Link</span>
             </button>
             <Link
               href={`/m/${slug}/memories`}
-              className="flex items-center gap-1.5 rounded-full bg-heirloom-primary-light px-3.5 py-1.5 text-xs font-semibold text-heirloom-primary shadow-sm transition-all hover:bg-heirloom-primary hover:text-heirloom-on-primary"
+              className="flex items-center gap-1.5 rounded-full bg-heirloom-primary-light px-3.5 py-1.5 text-sm font-semibold text-heirloom-primary shadow-sm transition-all hover:bg-heirloom-primary hover:text-heirloom-on-primary"
             >
               <MessageCircle className="h-[15px] w-[15px]" strokeWidth={2} />
               <span>Reflections ({reflections.length})</span>
@@ -184,7 +185,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
               <Link
                 href={`/m/${slug}/manage`}
                 title="Manage Memoir Access & Privacy"
-                className="flex items-center gap-1.5 rounded-full border border-heirloom-border px-3 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-all hover:border-heirloom-primary/40 hover:text-heirloom-primary"
+                className="flex items-center gap-1.5 rounded-full border border-heirloom-border px-3 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-all hover:border-heirloom-primary/40 hover:text-heirloom-primary"
               >
                 <Settings className="h-[15px] w-[15px]" strokeWidth={2} />
                 <span>Manage Access</span>
@@ -212,13 +213,13 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                 <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-heirloom-gold-accent/20 bg-heirloom-surface-container-low text-heirloom-gold-accent">
                   <Flower2 className="h-5 w-5" strokeWidth={1.5} />
                 </div>
-                <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.25em] text-heirloom-primary">
+                <p className="mb-1.5 text-sm font-bold uppercase tracking-[0.25em] text-heirloom-primary">
                   {memoirMeta.title} • {memoirMeta.volume}
                 </p>
                 <h1 className="mb-3 max-w-[700px] font-heirloom-serif text-3xl leading-tight tracking-tight text-heirloom-text-primary xl:text-4xl">
                   {chapterOne.title}
                 </h1>
-                <div className="mb-4 flex flex-wrap items-center justify-center gap-2 text-xs font-medium text-heirloom-text-secondary">
+                <div className="mb-4 flex flex-wrap items-center justify-center gap-2 text-sm font-medium text-heirloom-text-secondary">
                   <span>Dedicated to {chapterOne.dedicatedTo}</span>
                   <span className="text-heirloom-text-tertiary">•</span>
                   <span>Curated by {chapterOne.curatedBy}</span>
@@ -230,7 +231,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                 </div>
                 <div className="flex w-48 items-center justify-center gap-3 text-heirloom-gold-accent">
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent to-heirloom-gold-accent/60" />
-                  <Gem className="h-[13px] w-[13px]" strokeWidth={2} />
+                  <Gem className="h-4 w-4" strokeWidth={2} />
                   <div className="h-px flex-1 bg-gradient-to-l from-transparent to-heirloom-gold-accent/60" />
                 </div>
               </header>
@@ -246,12 +247,12 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                     <div className="absolute inset-0 flex items-center justify-center text-heirloom-bg-card/70">
                       <Camera className="h-10 w-10" strokeWidth={1.25} />
                     </div>
-                    <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-heirloom-inverse-surface/85 px-3 py-1 text-[11px] font-medium tracking-wide text-heirloom-inverse-on-surface shadow-sm backdrop-blur-sm">
-                      <Camera className="h-[13px] w-[13px]" strokeWidth={2} />
+                    <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-heirloom-inverse-surface/85 px-3 py-1 text-sm font-medium tracking-wide text-heirloom-inverse-on-surface shadow-sm backdrop-blur-sm">
+                      <Camera className="h-4 w-4" strokeWidth={2} />
                       <span>Archival Plate 04</span>
                     </div>
                   </div>
-                  <figcaption className="mt-2.5 flex flex-wrap items-center justify-center gap-2 text-center text-xs italic text-heirloom-text-secondary">
+                  <figcaption className="mt-2.5 flex flex-wrap items-center justify-center gap-2 text-center text-sm italic text-heirloom-text-secondary">
                     <span>{chapterOne.photoCaption}</span>
                     <span className="text-heirloom-text-tertiary">•</span>
                     <span className="text-heirloom-text-tertiary">{chapterOne.photoCredit}</span>
@@ -264,23 +265,23 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
                       <span className="h-2 w-2 animate-pulse rounded-full bg-heirloom-primary" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-heirloom-primary">
+                      <span className="text-sm font-bold uppercase tracking-widest text-heirloom-primary">
                         Living Memory Passage
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={() => setSuggestOpen(true)}
-                      className="flex items-center gap-1 rounded-full bg-heirloom-primary-light px-2.5 py-1 text-[11px] font-semibold text-heirloom-primary transition-all hover:bg-heirloom-primary/15"
+                      className="flex items-center gap-1 rounded-full bg-heirloom-primary-light px-2.5 py-1 text-sm font-semibold text-heirloom-primary transition-all hover:bg-heirloom-primary/15"
                     >
-                      <PenLine className="h-[13px] w-[13px]" strokeWidth={2} />
+                      <PenLine className="h-4 w-4" strokeWidth={2} />
                       <span>Suggest edit</span>
                     </button>
                   </div>
                   <p className="font-heirloom-serif text-lg italic leading-relaxed text-heirloom-text-primary sm:text-xl">
                     &ldquo;{chapterOne.livingPassage}&rdquo;
                   </p>
-                  <div className="mt-3 flex items-center justify-between border-t border-heirloom-border/60 pt-2.5 text-[11px] text-heirloom-text-tertiary">
+                  <div className="mt-3 flex items-center justify-between border-t border-heirloom-border/60 pt-2.5 text-sm text-heirloom-text-tertiary">
                     <span>Remember something differently? Anyone in the family can suggest corrections.</span>
                     <ShieldCheck className="h-[15px] w-[15px]" strokeWidth={1.75} />
                   </div>
@@ -305,13 +306,13 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                       <X className="h-4 w-4" strokeWidth={2} />
                     </button>
                   </div>
-                  <p className="mb-4 text-xs text-heirloom-text-secondary">
+                  <p className="mb-4 text-sm text-heirloom-text-secondary">
                     Your suggested correction will be gently reviewed by {chapterOne.curatedBy} before being etched
                     into the permanent heirloom record.
                   </p>
                   <div className="space-y-3">
                     <div>
-                      <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-heirloom-text-primary">
+                      <label className="mb-1 block text-sm font-semibold uppercase tracking-wider text-heirloom-text-primary">
                         Your Name or Relation
                       </label>
                       <input
@@ -319,11 +320,11 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                         value={suggestName}
                         onChange={(e) => setSuggestName(e.target.value)}
                         placeholder="e.g., Cousin Timothy or Aunt Claire"
-                        className="w-full rounded-lg border border-heirloom-border bg-heirloom-bg-card px-3.5 py-2 text-xs text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/30"
+                        className="w-full rounded-lg border border-heirloom-border bg-heirloom-bg-card px-3.5 py-2 text-sm text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/30"
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-heirloom-text-primary">
+                      <label className="mb-1 block text-sm font-semibold uppercase tracking-wider text-heirloom-text-primary">
                         Suggested Correction / Added Detail
                       </label>
                       <textarea
@@ -331,21 +332,21 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                         value={suggestText}
                         onChange={(e) => setSuggestText(e.target.value)}
                         placeholder="Actually, I remember it happening a little differently..."
-                        className="w-full resize-none rounded-lg border border-heirloom-border bg-heirloom-bg-card px-3.5 py-2 text-xs text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/30"
+                        className="w-full resize-none rounded-lg border border-heirloom-border bg-heirloom-bg-card px-3.5 py-2 text-sm text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/30"
                       />
                     </div>
                     <div className="flex justify-end gap-2.5 pt-1">
                       <button
                         type="button"
                         onClick={() => setSuggestOpen(false)}
-                        className="rounded-full px-4 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-bg-card"
+                        className="rounded-full px-4 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-all hover:bg-heirloom-bg-card"
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
                         onClick={submitSuggestion}
-                        className="flex items-center gap-1.5 rounded-full bg-heirloom-primary px-5 py-1.5 text-xs font-semibold text-heirloom-on-primary shadow-sm transition-all hover:bg-heirloom-primary-hover"
+                        className="flex items-center gap-1.5 rounded-full bg-heirloom-primary px-5 py-1.5 text-sm font-semibold text-heirloom-on-primary shadow-sm transition-all hover:bg-heirloom-primary-hover"
                       >
                         <Send className="h-[14px] w-[14px]" strokeWidth={2} />
                         <span>Submit to Curator</span>
@@ -353,7 +354,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                     </div>
                   </div>
                   {suggestSubmitted && (
-                    <div className="mt-3 flex items-center gap-2 rounded-lg bg-heirloom-success-light px-2.5 py-2 text-xs text-heirloom-success">
+                    <div className="mt-3 flex items-center gap-2 rounded-lg bg-heirloom-success-light px-2.5 py-2 text-sm text-heirloom-success">
                       <ShieldCheck className="h-[17px] w-[17px]" strokeWidth={2} />
                       <span>Thank you! Your revision suggestion has been shared with {chapterOne.curatedBy.split(' ')[0]}.</span>
                     </div>
@@ -366,7 +367,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                   End of Chapter One
                 </span>
                 <div className="mb-3 h-0.5 w-10 rounded-full bg-heirloom-primary/30" />
-                <p className="max-w-[440px] text-[11px] leading-relaxed text-heirloom-text-tertiary">
+                <p className="max-w-[440px] text-sm leading-relaxed text-heirloom-text-tertiary">
                   This archival record was assembled using handwritten journals, recorded audiotapes, and photographs
                   preserved by the family.
                 </p>
@@ -384,11 +385,11 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                   </div>
                   <h2 className="font-heirloom-serif text-xl text-heirloom-text-primary">Family Reflections</h2>
                 </div>
-                <span className="rounded-full bg-heirloom-primary-light px-2.5 py-0.5 text-[11px] font-bold text-heirloom-primary">
+                <span className="rounded-full bg-heirloom-primary-light px-2.5 py-0.5 text-sm font-bold text-heirloom-primary">
                   {reflections.length} Shared
                 </span>
               </div>
-              <p className="mb-3 text-xs leading-relaxed text-heirloom-text-secondary">
+              <p className="mb-3 text-sm leading-relaxed text-heirloom-text-secondary">
                 Your voice becomes part of this family heirloom. Add personal notes or stories.
               </p>
               <div className="space-y-2.5">
@@ -397,7 +398,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                   value={reflectionInput}
                   onChange={(e) => setReflectionInput(e.target.value)}
                   placeholder="Share a memory, reaction, or personal story that this chapter brings to mind..."
-                  className="w-full resize-none rounded-lg border border-heirloom-border/70 bg-heirloom-surface-container-low px-3 py-3 text-xs text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/20"
+                  className="w-full resize-none rounded-lg border border-heirloom-border/70 bg-heirloom-surface-container-low px-3 py-3 text-sm text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/20"
                 />
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
@@ -407,13 +408,13 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                       value={reflectionAuthor}
                       onChange={(e) => setReflectionAuthor(e.target.value)}
                       placeholder="Your name & relation"
-                      className="w-full rounded-lg border border-heirloom-border/70 bg-heirloom-surface-container-low py-1.5 pl-8 pr-2.5 text-[11px] text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/20"
+                      className="w-full rounded-lg border border-heirloom-border/70 bg-heirloom-surface-container-low py-1.5 pl-8 pr-2.5 text-sm text-heirloom-text-primary placeholder:text-heirloom-text-tertiary focus:outline-none focus:ring-2 focus:ring-heirloom-primary/20"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={postReflection}
-                    className="flex shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-heirloom-primary px-4 py-1.5 text-xs font-semibold text-heirloom-on-primary shadow-sm transition-all hover:bg-heirloom-primary-hover"
+                    className="flex shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-heirloom-primary px-4 py-1.5 text-sm font-semibold text-heirloom-on-primary shadow-sm transition-all hover:bg-heirloom-primary-hover"
                   >
                     <Feather className="h-[14px] w-[14px]" strokeWidth={2} />
                     <span>Post</span>
@@ -427,34 +428,34 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
                 <div key={r.id} className="rounded-xl border border-heirloom-border/80 bg-heirloom-bg-card p-4 shadow-sm transition-all hover:shadow-md">
                   <div className="mb-2 flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-heirloom-secondary-container text-[11px] font-bold tracking-tight text-heirloom-text-primary">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-heirloom-secondary-container text-sm font-bold tracking-tight text-heirloom-text-primary">
                         {initialsOf(r.author)}
                       </div>
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-heirloom-text-primary">{r.author}</span>
-                          <span className="rounded-full bg-heirloom-surface-container px-1.5 py-0.5 text-[9px] font-semibold uppercase text-heirloom-text-secondary">
+                          <span className="text-sm font-bold text-heirloom-text-primary">{r.author}</span>
+                          <span className="rounded-full bg-heirloom-surface-container px-1.5 py-0.5 text-sm font-semibold uppercase text-heirloom-text-secondary">
                             {r.relation}
                           </span>
                         </div>
-                        <span className="text-[10px] text-heirloom-text-tertiary">{r.timeAgo}</span>
+                        <span className="text-sm text-heirloom-text-tertiary">{r.timeAgo}</span>
                       </div>
                     </div>
                     <button
                       type="button"
                       onClick={() => toggleLike(r.id)}
-                      className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold transition-colors ${
+                      className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold transition-colors ${
                         likedIds.has(r.id)
                           ? 'bg-heirloom-danger-light text-heirloom-danger'
                           : 'bg-heirloom-surface-container-low text-heirloom-text-secondary hover:bg-heirloom-danger-light hover:text-heirloom-danger'
                       }`}
                     >
-                      <Heart className="h-[13px] w-[13px] text-heirloom-danger" strokeWidth={2} fill={likedIds.has(r.id) ? 'currentColor' : 'none'} />
+                      <Heart className="h-4 w-4 text-heirloom-danger" strokeWidth={2} fill={likedIds.has(r.id) ? 'currentColor' : 'none'} />
                       <span>{r.likes}</span>
                     </button>
                   </div>
-                  <p className="mb-2.5 text-xs leading-relaxed text-heirloom-text-primary">{r.body}</p>
-                  <div className="flex items-center gap-3 border-t border-heirloom-border/50 pt-1.5 text-[10px] text-heirloom-text-tertiary">
+                  <p className="mb-2.5 text-sm leading-relaxed text-heirloom-text-primary">{r.body}</p>
+                  <div className="flex items-center gap-3 border-t border-heirloom-border/50 pt-1.5 text-sm text-heirloom-text-tertiary">
                     <button type="button" className="flex items-center gap-1 transition-colors hover:text-heirloom-primary">
                       <Reply className="h-3 w-3" strokeWidth={2} />
                       <span>Reply</span>
@@ -469,7 +470,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
               ))}
             </div>
 
-            <div className="flex shrink-0 items-start gap-2.5 rounded-xl border border-heirloom-primary/20 bg-heirloom-primary-light/40 p-3 text-[11px] text-heirloom-text-secondary">
+            <div className="flex shrink-0 items-start gap-2.5 rounded-xl border border-heirloom-primary/20 bg-heirloom-primary-light/40 p-3 text-sm text-heirloom-text-secondary">
               <ShieldCheck className="mt-0.5 h-[17px] w-[17px] shrink-0 text-heirloom-primary" strokeWidth={1.75} />
               <p className="leading-relaxed">
                 Family reflections are permanently safeguarded in the private family archive vault with verified
@@ -481,11 +482,11 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
       </div>
 
       <footer className="flex h-10 w-full shrink-0 items-center border-t border-heirloom-border/80 bg-heirloom-bg-page">
-        <div className="mx-auto flex w-full max-w-[1840px] items-center justify-between px-8 text-xs text-heirloom-text-tertiary">
+        <div className="mx-auto flex w-full max-w-[1840px] items-center justify-between px-8 text-sm text-heirloom-text-tertiary">
           <p className="font-heirloom-serif text-sm italic text-heirloom-text-secondary">
             Preserving generational memories with quiet dignity.
           </p>
-          <div className="flex items-center gap-6 text-[11px] font-medium">
+          <div className="flex items-center gap-6 text-sm font-medium">
             <Link href="#" className="transition-colors hover:text-heirloom-primary">About</Link>
             <Link href="#" className="transition-colors hover:text-heirloom-primary">Privacy</Link>
             <span>© The Memoir Project</span>
@@ -493,7 +494,7 @@ export default function PublicMemoirViewPage({ params }: { params: Promise<{ slu
         </div>
       </footer>
 
-      <HeirloomToast toast={toast} />
+      <HeirloomToast toast={toast} onDismiss={hideToast} />
     </div>
   )
 }

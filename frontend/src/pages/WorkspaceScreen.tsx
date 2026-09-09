@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, UserPlus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import BackButton from '../components/BackButton'
 import Sidebar, { type WorkspaceTab } from '../components/Sidebar'
 import MemoryRow from '../components/MemoryRow'
 import MemoryComposer from '../components/MemoryComposer'
 import { useMemories } from '../context/MemoryContext'
-import { sampleContributors } from '../data/sampleMemories'
 import { useSubject } from '../data/subject'
+import { useHeirloomData } from '../data/heirloom'
 import type { Memory } from '../types'
 import { groupByDay } from '../utils/format'
 
@@ -169,7 +170,7 @@ function TimelineTab({
         dayGroups.map(([label, items]) => (
           <div key={label} className="mb-8">
             <div className="mb-3 flex items-center gap-4">
-              <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
+              <span className="whitespace-nowrap text-sm font-medium uppercase tracking-[0.1em] text-charcoal/40">
                 {label}
               </span>
               <span className="h-px flex-1 bg-charcoal/15" />
@@ -185,25 +186,30 @@ function TimelineTab({
 }
 
 function ContributorsTab() {
+  const router = useRouter()
+  const { memoirMeta } = useHeirloomData()
+
   return (
     <div>
-      <SectionHeading title="Contributors" count={sampleContributors.length} />
-      <div className="divide-y divide-charcoal/10">
-        {sampleContributors.map((person) => (
-          <div key={person.id} className="flex items-center justify-between py-4">
-            <div>
-              <p className="text-[15px] text-charcoal">{person.name}</p>
-              <p className="text-sm text-charcoal/50">{person.relationship}</p>
-            </div>
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide ${
-                person.status === 'contributed' ? 'bg-terracotta/15 text-terracotta' : 'bg-cream text-charcoal/50'
-              }`}
-            >
-              {person.status === 'contributed' ? 'Contributed' : 'Invited'}
-            </span>
-          </div>
-        ))}
+      <SectionHeading title="Contributors" count={0} />
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-charcoal/15 bg-white px-8 py-14 text-center">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
+          <UserPlus className="h-6 w-6" strokeWidth={1.75} />
+        </span>
+        <p className="mt-1 font-display text-xl text-charcoal">
+          Invite your family and friends to build memories together
+        </p>
+        <p className="max-w-sm text-sm leading-relaxed text-charcoal/60">
+          Share this memoir&apos;s link and anyone you invite can add their own stories, photos, and reflections.
+        </p>
+        <button
+          type="button"
+          onClick={() => router.push(`/m/${memoirMeta.slug}/manage`)}
+          className="mt-3 flex items-center gap-2 rounded-lg bg-terracotta px-6 py-2.5 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark"
+        >
+          <UserPlus className="h-4 w-4" strokeWidth={2} />
+          Invite Family &amp; Friends
+        </button>
       </div>
     </div>
   )

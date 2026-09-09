@@ -6,6 +6,7 @@ import BookHeader from './BookHeader'
 import BookFooter from './BookFooter'
 import TocDrawer from './TocDrawer'
 import { getNavInfo } from '@/lib/book-nav'
+import { useMemoirData } from '@/data/book'
 
 interface BookChromeProps {
   children: ReactNode
@@ -16,11 +17,13 @@ interface BookChromeProps {
 export default function BookChrome({ children, headerVariant = 'solid', className = '' }: BookChromeProps) {
   const pathname = usePathname()
   const [tocOpen, setTocOpen] = useState(false)
-  const nav = getNavInfo(pathname ?? '')
+  const { chapters, bookMeta } = useMemoirData()
+  const nav = getNavInfo(pathname ?? '', chapters)
 
   return (
     <div className="flex min-h-screen flex-col bg-book-surface">
       <BookHeader
+        title={bookMeta.title}
         variant={headerVariant}
         chapterLabel={nav.current?.chapterTitle ? `Chapter ${nav.current.chapterNumber}: ${nav.current.chapterTitle}` : undefined}
         onMenuClick={() => setTocOpen(true)}

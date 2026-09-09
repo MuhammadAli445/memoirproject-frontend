@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
-import { sampleMemories } from '../data/sampleMemories'
 import type { Memory } from '../types'
 
 interface MemoryContextValue {
@@ -12,7 +11,7 @@ interface MemoryContextValue {
 const MemoryContext = createContext<MemoryContextValue | null>(null)
 
 export function MemoryProvider({ children }: { children: ReactNode }) {
-  const [memories, setMemories] = useState<Memory[]>(sampleMemories)
+  const [memories, setMemories] = useState<Memory[]>([])
 
   const addMemory = useCallback((memory: Memory) => {
     setMemories((prev) => [memory, ...prev])

@@ -19,7 +19,7 @@ import {
   X,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
-import { memoirMeta, searchResults, type SearchResult } from '@/data/heirloom'
+import { useHeirloomData, type SearchResult } from '@/data/heirloom'
 import HeirloomFooter from '@/components/heirloom/HeirloomFooter'
 import { HeirloomToast, useHeirloomToast } from '@/components/heirloom/HeirloomToast'
 
@@ -31,7 +31,8 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
   const { slug } = use(params)
   const router = useRouter()
   const { user } = useAuth()
-  const { toast, showToast } = useHeirloomToast()
+  const { memoirMeta, searchResults } = useHeirloomData()
+  const { toast, showToast, hideToast } = useHeirloomToast()
 
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<'all' | SearchResult['category']>('all')
@@ -44,7 +45,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
       photos: searchResults.filter((r) => r.category === 'photos').length,
       recordings: searchResults.filter((r) => r.category === 'recordings').length,
     }
-  }, [])
+  }, [searchResults])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -54,7 +55,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
         !q || r.title.toLowerCase().includes(q) || r.excerpt.toLowerCase().includes(q) || r.badge.toLowerCase().includes(q)
       return matchesCategory && matchesQuery
     })
-  }, [query, category])
+  }, [query, category, searchResults])
 
   function handleExportClick() {
     if (!user) {
@@ -64,7 +65,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
     setExportState('preparing')
     setTimeout(() => {
       setExportState('done')
-      showToast('Archival PDF download started', Download)
+      showToast('Your download has started', Download)
       setTimeout(() => setExportState('idle'), 3000)
     }, 1200)
   }
@@ -80,28 +81,28 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
               </span>
             </Link>
             <div className="hidden items-center gap-2 border-l border-heirloom-border pl-4 text-heirloom-text-tertiary md:flex">
-              <span className="text-[11px] font-medium uppercase tracking-widest text-heirloom-text-tertiary">
-                Archive Reader
+              <span className="text-sm font-medium uppercase tracking-widest text-heirloom-text-tertiary">
+                Search
               </span>
               <span className="text-heirloom-text-tertiary/60">/</span>
               <span className="text-sm font-medium text-heirloom-text-secondary">{memoirMeta.title}</span>
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <span className="hidden items-center gap-1.5 rounded-full border border-heirloom-border/50 bg-heirloom-surface-container-low/90 px-4 py-1 font-heirloom-mono text-[11px] uppercase tracking-widest text-heirloom-text-tertiary lg:inline-flex">
+            <span className="hidden items-center gap-1.5 rounded-full border border-heirloom-border/50 bg-heirloom-surface-container-low/90 px-4 py-1 font-heirloom-mono text-sm uppercase tracking-widest text-heirloom-text-tertiary lg:inline-flex">
               Ref. {memoirMeta.archiveCode}
             </span>
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border/70 bg-heirloom-bg-card-alt px-4 py-1.5 text-[13px] text-heirloom-text-secondary shadow-sm">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border/70 bg-heirloom-bg-card-alt px-4 py-1.5 text-base text-heirloom-text-secondary shadow-sm">
               <span className="h-2 w-2 animate-pulse rounded-full bg-heirloom-primary" />
               <span className="font-medium text-heirloom-text-primary">{memoirMeta.stories + memoirMeta.reflections} Memories</span>
               <span className="text-heirloom-text-tertiary">•</span>
-              <span>{memoirMeta.photos} Archival Photos</span>
+              <span>{memoirMeta.photos} Photos</span>
               <span className="text-heirloom-text-tertiary">•</span>
               <span>{memoirMeta.chapters} Chapters</span>
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border px-3.5 py-1.5 text-xs font-semibold text-heirloom-text-secondary transition-colors hover:border-heirloom-primary/40 hover:text-heirloom-primary"
+              className="inline-flex items-center gap-1.5 rounded-full border border-heirloom-border px-3.5 py-1.5 text-sm font-semibold text-heirloom-text-secondary transition-colors hover:border-heirloom-primary/40 hover:text-heirloom-primary"
             >
               <Home className="h-4 w-4" strokeWidth={2} />
               Dashboard
@@ -120,7 +121,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
               <ArrowLeft className="h-[18px] w-[18px] transition-transform group-hover:-translate-x-1" strokeWidth={2} />
               <span>Back to Memoir ({memoirMeta.title})</span>
             </Link>
-            <span className="font-heirloom-mono text-xs text-heirloom-text-tertiary">Viewing unredacted archival collection</span>
+            <span className="font-heirloom-mono text-sm text-heirloom-text-tertiary">Showing everything in this memoir</span>
           </div>
 
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
@@ -156,17 +157,17 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                     </button>
                   )}
                 </div>
-                <div className="flex items-center justify-between px-4 pt-1 text-xs text-heirloom-text-tertiary">
+                <div className="flex items-center justify-between px-4 pt-1 text-sm text-heirloom-text-tertiary">
                   <span className="flex items-center gap-1.5">
-                    <BookOpen className="h-[14px] w-[14px]" strokeWidth={2} />
-                    Searching unredacted family chronicles
+                    <BookOpen className="h-4 w-4" strokeWidth={2} />
+                    Searching every story, photo, and recording
                   </span>
-                  <span className="font-heirloom-mono text-[11px] text-heirloom-text-tertiary">Press Enter or type to filter</span>
+                  <span className="font-heirloom-mono text-sm text-heirloom-text-tertiary">Press Enter or type to filter</span>
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-[12px] font-medium uppercase tracking-wider text-heirloom-text-tertiary">
+                <span className="text-sm font-medium uppercase tracking-wider text-heirloom-text-tertiary">
                   Filter by Category
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
@@ -174,7 +175,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                     [
                       { key: 'all', label: 'All Results', count: counts.all },
                       { key: 'chapters', label: 'Stories & Chapters', count: counts.chapters },
-                      { key: 'photos', label: 'Archival Photos', count: counts.photos },
+                      { key: 'photos', label: 'Photos', count: counts.photos },
                       { key: 'recordings', label: 'Audio & Video', count: counts.recordings },
                     ] as const
                   ).map((chip) => (
@@ -182,7 +183,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                       key={chip.key}
                       type="button"
                       onClick={() => setCategory(chip.key)}
-                      className={`h-8 whitespace-nowrap rounded-full px-4 text-[12px] font-semibold transition-all ${
+                      className={`h-8 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition-all ${
                         category === chip.key
                           ? 'bg-heirloom-primary-light text-heirloom-primary shadow-sm ring-1 ring-heirloom-primary/20'
                           : 'border border-heirloom-border bg-heirloom-bg-card text-heirloom-text-secondary hover:bg-heirloom-surface-container hover:text-heirloom-text-primary'
@@ -204,21 +205,20 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                     </div>
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1 text-[12px] font-bold uppercase tracking-wider text-heirloom-primary">
-                          <Lock className="h-[14px] w-[14px]" strokeWidth={2} />
-                          Owner Only • Archival Export
+                        <span className="flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-heirloom-primary">
+                          <Lock className="h-4 w-4" strokeWidth={2} />
+                          Owner Only
                         </span>
                         <span className="text-heirloom-text-tertiary">•</span>
-                        <span className="text-[12px] font-medium text-heirloom-text-secondary">300 DPI Hardbound</span>
+                        <span className="text-sm font-medium text-heirloom-text-secondary">High Quality</span>
                       </div>
                       <h2 className="font-heirloom-serif text-[28px] leading-snug text-heirloom-text-primary">
-                        Download The Complete Memoir as an Archival PDF
+                        Download the Whole Memoir as a PDF
                       </h2>
                     </div>
                   </div>
                   <p className="pl-1 text-sm leading-relaxed text-heirloom-text-secondary">
-                    To protect private family records, complete high-resolution PDF exports are restricted to the
-                    verified memoir creator.
+                    To protect the family&apos;s privacy, only the memoir owner can download a full copy.
                   </p>
                   <div className="flex flex-col gap-2 pt-1">
                     <button
@@ -230,7 +230,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                       {exportState === 'preparing' ? (
                         <>
                           <Download className="h-4 w-4 animate-bounce text-white/90" strokeWidth={2} />
-                          <span>Preparing 42 MB Print Kept...</span>
+                          <span>Preparing your copy...</span>
                         </>
                       ) : exportState === 'done' ? (
                         <>
@@ -240,31 +240,30 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                       ) : user ? (
                         <>
                           <Download className="h-4 w-4 text-white/90" strokeWidth={2} />
-                          <span>Export Archival PDF</span>
+                          <span>Download PDF</span>
                         </>
                       ) : (
                         <>
                           <Key className="h-4 w-4 text-white/90" strokeWidth={2} />
-                          <span>Owner Sign In to Download</span>
+                          <span>Sign In to Download</span>
                         </>
                       )}
                     </button>
-                    <div className="mt-1 flex items-start gap-2 rounded-lg border border-heirloom-border bg-heirloom-bg-card-alt p-2.5 text-xs text-heirloom-text-secondary">
+                    <div className="mt-1 flex items-start gap-2 rounded-lg border border-heirloom-border bg-heirloom-bg-card-alt p-2.5 text-sm text-heirloom-text-secondary">
                       <Lock className="mt-0.5 h-4 w-4 shrink-0 text-heirloom-primary" strokeWidth={2} />
                       <span>
-                        Requires creator credentials (email &amp; password) to verify ownership before generating
-                        print-ready files.
+                        You&apos;ll need to sign in with the owner&apos;s email and password to download.
                       </span>
                     </div>
-                    <div className="flex items-center justify-between px-1 pt-1 text-xs text-heirloom-text-secondary">
+                    <div className="flex items-center justify-between px-1 pt-1 text-sm text-heirloom-text-secondary">
                       <button
                         type="button"
-                        onClick={() => showToast('Permission request sent to the memoir owner')}
-                        className="text-[12px] font-semibold text-heirloom-text-secondary underline decoration-dotted underline-offset-4 transition-colors hover:text-heirloom-primary"
+                        onClick={() => showToast('We let the memoir owner know you asked')}
+                        className="text-sm font-semibold text-heirloom-text-secondary underline decoration-dotted underline-offset-4 transition-colors hover:text-heirloom-primary"
                       >
-                        Request Access from Creator
+                        Ask the Owner for a Copy
                       </button>
-                      <span className="text-[12px] italic text-heirloom-text-tertiary">Updated yesterday</span>
+                      <span className="text-sm italic text-heirloom-text-tertiary">Updated yesterday</span>
                     </div>
                   </div>
                 </div>
@@ -281,7 +280,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                       &ldquo;{query || 'everything'}&rdquo;
                     </span>
                   </h3>
-                  <span className="ml-2 font-heirloom-mono text-xs text-heirloom-text-tertiary">
+                  <span className="ml-2 font-heirloom-mono text-sm text-heirloom-text-tertiary">
                     ({filtered.length} of {searchResults.length} shown)
                   </span>
                 </div>
@@ -300,14 +299,14 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                           <div className="flex h-full w-full items-center justify-center text-heirloom-bg-card/70">
                             <Camera className="h-9 w-9" strokeWidth={1.25} />
                           </div>
-                          <div className="absolute bottom-2 left-2 rounded bg-heirloom-text-primary/75 px-2 py-0.5 font-heirloom-mono text-[10px] text-heirloom-on-primary backdrop-blur-sm">
+                          <div className="absolute bottom-2 left-2 rounded bg-heirloom-text-primary/75 px-2 py-0.5 font-heirloom-mono text-sm text-heirloom-on-primary backdrop-blur-sm">
                             {result.image?.meta}
                           </div>
                         </div>
                       )}
                       <div className="flex w-full flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-heirloom-primary-light px-2.5 py-0.5 text-[12px] font-semibold text-heirloom-primary">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-heirloom-primary-light px-2.5 py-0.5 text-sm font-semibold text-heirloom-primary">
                             <Icon className="h-[14px] w-[14px]" strokeWidth={2} />
                             {result.badge}
                           </span>
@@ -316,7 +315,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                           {result.title}
                         </h4>
                         <p className="text-[15px] leading-relaxed text-heirloom-text-secondary">{result.excerpt}</p>
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-heirloom-border/60 pt-2 text-xs text-heirloom-text-tertiary">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-heirloom-border/60 pt-2 text-sm text-heirloom-text-tertiary">
                           <div className="flex items-center gap-1.5">
                             <span>{result.metaLeft}</span>
                             {result.metaAuthor && (
@@ -328,7 +327,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                           </div>
                           <Link
                             href={`/book/memory/${result.id}`}
-                            className="inline-flex items-center gap-1 text-[13px] font-semibold text-heirloom-primary transition-transform hover:text-heirloom-primary-hover group-hover:translate-x-1"
+                            className="inline-flex items-center gap-1 text-base font-semibold text-heirloom-primary transition-transform hover:text-heirloom-primary-hover group-hover:translate-x-1"
                           >
                             <span>{result.actionLabel}</span>
                             {result.kind === 'photo' ? (
@@ -342,7 +341,13 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
                     </article>
                   )
                 })}
-                {filtered.length === 0 && (
+                {filtered.length === 0 && searchResults.length === 0 && (
+                  <div className="rounded-2xl border border-dashed border-heirloom-border p-10 text-center text-sm text-heirloom-text-tertiary">
+                    Nothing has been recorded yet. Once memories are added, they&apos;ll show up here to search
+                    through.
+                  </div>
+                )}
+                {filtered.length === 0 && searchResults.length > 0 && (
                   <div className="rounded-2xl border border-dashed border-heirloom-border p-10 text-center text-sm text-heirloom-text-tertiary">
                     No memories match &ldquo;{query}&rdquo;. Try a different name, place, or year.
                   </div>
@@ -375,7 +380,7 @@ export default function SearchExportPage({ params }: { params: Promise<{ slug: s
       </main>
 
       <HeirloomFooter />
-      <HeirloomToast toast={toast} />
+      <HeirloomToast toast={toast} onDismiss={hideToast} />
     </div>
   )
 }

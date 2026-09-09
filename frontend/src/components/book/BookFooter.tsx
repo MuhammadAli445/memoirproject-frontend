@@ -31,7 +31,7 @@ export default function BookFooter({ prev, next, chapterCount, chapterNumber }: 
         </span>
       </button>
 
-      <span className="flex-shrink-0 text-xs font-medium uppercase tracking-wide text-book-inverse-on-surface/70">
+      <span className="flex-shrink-0 text-sm font-medium uppercase tracking-wide text-book-inverse-on-surface/70">
         {chapterNumber ? `Chapter ${chapterNumber} of ${chapterCount}` : 'Front Matter'}
       </span>
 

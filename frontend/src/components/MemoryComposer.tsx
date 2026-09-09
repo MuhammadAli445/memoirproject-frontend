@@ -219,31 +219,31 @@ export default function MemoryComposer({
           </div>
         </div>
 
-        {/* Bottom toolbar */}
-        <div className="mt-6 flex items-center gap-3">
-          <button
-            type="button"
-            disabled
-            title="Text formatting — coming soon"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/40"
-          >
-            <AlignLeft className="h-4 w-4" strokeWidth={1.75} />
-          </button>
+        {/* Bottom toolbar — voice comes first since speaking is often easier than typing */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => setIsRecordingOpen(true)}
-            title="Record voice"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/50 transition hover:border-terracotta hover:text-terracotta"
+            className="flex h-12 items-center gap-2 rounded-full bg-terracotta px-5 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark"
           >
-            <Mic className="h-4 w-4" strokeWidth={1.75} />
+            <Mic className="h-4 w-4" strokeWidth={2} />
+            Record Instead
           </button>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            title="Add photo"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/50 transition hover:border-terracotta hover:text-terracotta"
+            className="flex h-12 items-center gap-2 rounded-full border border-charcoal/15 px-5 text-sm font-medium text-charcoal/60 transition hover:border-terracotta hover:text-terracotta"
           >
             <Camera className="h-4 w-4" strokeWidth={1.75} />
+            Add Photo
+          </button>
+          <button
+            type="button"
+            disabled
+            title="Text formatting — coming soon"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-charcoal/15 text-charcoal/40"
+          >
+            <AlignLeft className="h-4 w-4" strokeWidth={1.75} />
           </button>
           <input
             ref={fileInputRef}
@@ -257,7 +257,7 @@ export default function MemoryComposer({
             type="button"
             onClick={handleSave}
             disabled={!hasContent}
-            className="ml-auto flex items-center gap-2 rounded-lg bg-terracotta px-8 py-3 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark disabled:cursor-not-allowed disabled:bg-terracotta/35"
+            className="ml-auto flex h-12 items-center gap-2 rounded-lg bg-terracotta px-8 text-sm font-semibold text-cream shadow-sm transition hover:bg-terracotta-dark disabled:cursor-not-allowed disabled:bg-terracotta/35"
           >
             <Save className="h-4 w-4" strokeWidth={2} />
             Save Memory

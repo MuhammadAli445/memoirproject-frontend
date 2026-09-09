@@ -1,4 +1,4 @@
-import { chapters } from '@/data/book'
+import type { BookChapter } from '@/data/book'
 
 export interface BookNavEntry {
   href: string
@@ -7,7 +7,7 @@ export interface BookNavEntry {
   chapterTitle?: string
 }
 
-export function getFlatSequence(): BookNavEntry[] {
+export function getFlatSequence(chapters: BookChapter[]): BookNavEntry[] {
   const entries: BookNavEntry[] = [
     { href: '/book', label: 'Cover' },
     { href: '/book/about', label: 'About This Memoir' },
@@ -41,8 +41,8 @@ export interface BookNavInfo {
   chapterCount: number
 }
 
-export function getNavInfo(pathname: string): BookNavInfo {
-  const sequence = getFlatSequence()
+export function getNavInfo(pathname: string, chapters: BookChapter[]): BookNavInfo {
+  const sequence = getFlatSequence(chapters)
   const index = sequence.findIndex((entry) => entry.href === pathname)
 
   if (index === -1) {

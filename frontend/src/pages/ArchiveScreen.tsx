@@ -53,7 +53,7 @@ export default function ArchiveScreen() {
               <button
                 type="button"
                 onClick={() => setShowFilter(!showFilter)}
-                className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.12em] text-charcoal/50 transition hover:text-charcoal"
+                className="flex items-center gap-1.5 text-sm font-medium uppercase tracking-[0.12em] text-charcoal/50 transition hover:text-charcoal"
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" strokeWidth={2} />
                 Filter
@@ -69,7 +69,7 @@ export default function ArchiveScreen() {
                   key={f}
                   type="button"
                   onClick={() => setFilter(f)}
-                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium capitalize transition ${
+                  className={`rounded-full px-3.5 py-1.5 text-sm font-medium capitalize transition ${
                     filter === f
                       ? 'bg-terracotta text-cream'
                       : 'border border-charcoal/15 text-charcoal/60 hover:border-terracotta hover:text-charcoal'
@@ -113,7 +113,7 @@ function MemoryCard({ memory }: { memory: Memory }) {
       {memory.type === 'photo' && (
         <div className="px-8 pt-8">
           <h2 className="font-display text-2xl text-charcoal">{memory.title}</h2>
-          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-sm font-medium uppercase tracking-[0.1em] text-charcoal/40">
             <span>{new Date(memory.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }).toUpperCase()}</span>
             {memory.location && (
               <>
@@ -156,7 +156,7 @@ function MemoryCard({ memory }: { memory: Memory }) {
                 />
               ))}
             </div>
-            <span className="flex-shrink-0 font-mono text-xs text-charcoal/40">
+            <span className="flex-shrink-0 font-mono text-sm text-charcoal/40">
               {formatDuration(memory.audioDurationSeconds)}
             </span>
           </div>
@@ -181,7 +181,7 @@ function MemoryCard({ memory }: { memory: Memory }) {
           </p>
         ) : memory.type === 'text' && memory.isDraft ? (
           <div className="rounded-lg border border-dashed border-charcoal/15 bg-cream p-4">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
+            <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.1em] text-charcoal/40">
               <span>Draft</span>
               <span>·</span>
               <span>{relativeTime(memory.updatedAt ?? memory.createdAt)}</span>
@@ -192,7 +192,7 @@ function MemoryCard({ memory }: { memory: Memory }) {
           </div>
         ) : memory.type === 'voice' && !memory.audioDurationSeconds ? (
           <div className="rounded-lg bg-cream p-4">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
+            <div className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.1em] text-charcoal/40">
               <Mic className="h-3.5 w-3.5" strokeWidth={2} />
               <span>Voice Note</span>
               <span>·</span>

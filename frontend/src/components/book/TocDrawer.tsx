@@ -24,7 +24,7 @@ export default function TocDrawer({ open, onClose }: { open: boolean; onClose: (
           type="button"
           onClick={onClose}
           aria-label="Close menu"
-          className="absolute right-4 top-4 rounded-full p-1.5 text-book-on-surface-variant transition hover:bg-book-on-surface/5"
+          className="absolute right-4 top-4 rounded-full p-2.5 text-book-on-surface-variant transition hover:bg-book-on-surface/5"
         >
           <X className="h-5 w-5" strokeWidth={2} />
         </button>

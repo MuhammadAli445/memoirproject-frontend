@@ -1,26 +1,11 @@
-import { bookMeta, bookStats, chapters as bookChapters, type BookMemory, type BookMemoryType } from './book'
+'use client'
+
+import { useMemo } from 'react'
+import { useMemoirData, type BookMemory, type BookMemoryType } from './book'
 
 // The Access & Sharing System (search, share link, reflections, manage access) is a
 // second "view" onto the same memoir rendered at /book — all content below is derived
-// from src/data/book.ts so the two experiences never drift apart.
-
-const founderChapter = bookChapters[0]
-const [startYearLabel] = founderChapter.dateRange.split('—').map((s) => s.trim())
-
-const contributorRelation: Record<string, string> = {
-  Amina: 'Granddaughter',
-  Sara: 'Granddaughter',
-  Omar: 'Son',
-  Dina: 'Granddaughter',
-  Mariam: 'Granddaughter',
-  Layla: 'Granddaughter',
-  Karim: 'Grandson',
-  'Family gathering': 'Family',
-}
-
-function relationOf(contributor: string): string {
-  return contributorRelation[contributor] ?? 'Family'
-}
+// live from useMemoirData() so the two experiences never drift apart.
 
 function initialsOf(name: string): string {
   return (
@@ -34,28 +19,6 @@ function initialsOf(name: string): string {
   )
 }
 
-export const memoirMeta = {
-  slug: 'ayesha-family-legacy-4f9k2p',
-  title: bookMeta.title,
-  subtitle: bookMeta.subtitle,
-  volume: 'Volume I',
-  establishedYear: Number(startYearLabel) || 1970,
-  chapterCount: bookChapters.length,
-  archiveCode: 'AYE-LHR-1970',
-  publicUrl: `https://memoirproject.org/m/ayesha-family-legacy-4f9k2p`,
-  visitsThisMonth: 128,
-  reflectionsPosted: 2,
-  totalContributors: bookStats.contributors,
-  createdLabel: `Est. ${startYearLabel}`,
-  updatedLabel: '2 days ago',
-  chapters: bookChapters.length,
-  stories: bookChapters
-    .flatMap((c) => c.memories)
-    .filter((m) => m.type === 'text' || m.type === 'quote').length,
-  photos: bookChapters.flatMap((c) => c.memories).filter((m) => m.type === 'photo').length,
-  reflections: 2,
-}
-
 export interface Reflection {
   id: string
   author: string
@@ -63,43 +26,6 @@ export interface Reflection {
   timeAgo: string
   body: string
   likes: number
-}
-
-export const initialReflections: Reflection[] = [
-  {
-    id: 'r1',
-    author: 'Dina',
-    relation: relationOf('Dina'),
-    timeAgo: '2 days ago',
-    body: "Reading Chapter One brought back the smell of her kitchen so vividly. Grandma always had a story ready before the tea had even finished steeping. Thank you for gathering all of this, it means everything to have it written down.",
-    likes: 5,
-  },
-  {
-    id: 'r2',
-    author: 'Karim',
-    relation: relationOf('Karim'),
-    timeAgo: 'Yesterday',
-    body: 'I remember visiting her in Lahore every summer. The way she greeted everyone at the door, like you were the only person she had been waiting for all day. This memoir captures her exactly as I remember her.',
-    likes: 3,
-  },
-]
-
-const founderQuoteMemory = founderChapter.memories.find((m) => m.type === 'quote')!
-const founderPhotoMemory = founderChapter.memories.find((m) => m.type === 'photo')!
-const founderTextMemory = founderChapter.memories.find((m) => m.type === 'text')!
-
-export const chapterOne = {
-  bgClassName: founderChapter.bgClassName,
-  title: `Chapter 1: ${founderChapter.title}`,
-  dedicatedTo: 'Grandma Ayesha and Her Family',
-  curatedBy: 'Amina',
-  readTime: '5 min read',
-  paragraphs: [founderQuoteMemory.body[0], founderQuoteMemory.body[2]],
-  photoCaption: founderPhotoMemory.caption ?? founderPhotoMemory.title,
-  photoCredit: founderPhotoMemory.attribution.replace(/^—\s*/, ''),
-  closingParagraphs: [founderPhotoMemory.body[0]],
-  livingPassage: founderQuoteMemory.body[1],
-  finalParagraph: founderTextMemory.body[founderTextMemory.body.length - 1],
 }
 
 export interface FamilyMemory {
@@ -119,35 +45,6 @@ export interface FamilyMemory {
   featured?: string
 }
 
-function likesFor(id: string): number {
-  let hash = 0
-  for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) % 97
-  return 3 + (hash % 14)
-}
-
-function footnoteFor(memory: BookMemory, type: BookMemoryType): string | undefined {
-  if (type === 'video') return `${memory.durationLabel ?? ''} · Filmed by ${memory.filmedBy ?? 'family'}`.trim()
-  if (type === 'audio') return 'Family audio recording'
-  return undefined
-}
-
-export const familyMemories: FamilyMemory[] = bookChapters.flatMap((chapter) =>
-  chapter.memories.map((memory) => ({
-    id: memory.id,
-    author: memory.contributor,
-    relation: relationOf(memory.contributor),
-    initials: initialsOf(memory.contributor),
-    date: memory.date ?? chapter.dateRange,
-    postedLabel: `From Chapter ${chapter.number}: ${chapter.title}`,
-    era: `Era: ${chapter.tagline}`,
-    title: memory.title,
-    quote: memory.body.join(' '),
-    footnote: footnoteFor(memory, memory.type),
-    image: memory.type === 'photo' ? { caption: memory.caption ?? memory.title, meta: 'Family Archive Print' } : undefined,
-    likes: likesFor(memory.id),
-  })),
-)
-
 export interface SearchResult {
   id: string
   kind: 'chapter' | 'photo' | 'recording'
@@ -159,6 +56,58 @@ export interface SearchResult {
   metaAuthor?: string
   actionLabel: string
   image?: { caption: string; meta: string }
+}
+
+export interface HeirloomData {
+  memoirMeta: {
+    slug: string
+    title: string
+    subtitle: string
+    volume: string
+    establishedYear: number
+    chapterCount: number
+    archiveCode: string
+    publicUrl: string
+    visitsThisMonth: number
+    reflectionsPosted: number
+    totalContributors: number
+    createdLabel: string
+    updatedLabel: string
+    chapters: number
+    stories: number
+    photos: number
+    reflections: number
+  }
+  initialReflections: Reflection[]
+  chapterOne: {
+    bgClassName: string
+    title: string
+    dedicatedTo: string
+    curatedBy: string
+    readTime: string
+    paragraphs: string[]
+    photoCaption: string
+    photoCredit: string
+    closingParagraphs: string[]
+    livingPassage: string
+    finalParagraph: string
+  }
+  familyMemories: FamilyMemory[]
+  searchResults: SearchResult[]
+}
+
+const SHARE_SLUG = 'family-memoir-4f9k2p'
+
+function likesFor(id: string): number {
+  let hash = 0
+  for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) % 97
+  return 3 + (hash % 14)
+}
+
+function footnoteFor(memory: BookMemory): string | undefined {
+  if (memory.type === 'video') return `${memory.durationLabel ?? ''} · Filmed by ${memory.filmedBy ?? 'family'}`.trim()
+  if (memory.type === 'audio') return 'Family audio recording'
+  return undefined
 }
 
 const actionLabelByType: Record<BookMemoryType, string> = {
@@ -189,17 +138,91 @@ function kindOf(type: BookMemoryType): SearchResult['kind'] {
   return 'chapter'
 }
 
-export const searchResults: SearchResult[] = bookChapters.flatMap((chapter) =>
-  chapter.memories.map((memory) => ({
-    id: memory.id,
-    kind: kindOf(memory.type),
-    category: categoryOf(memory.type),
-    badge: `Chapter ${chapter.number} • ${badgeNounByType[memory.type]}`,
-    title: memory.title,
-    excerpt: memory.type === 'photo' ? memory.caption ?? memory.title : memory.body[0],
-    metaLeft: memory.date ?? chapter.tagline,
-    metaAuthor: memory.contributor,
-    actionLabel: actionLabelByType[memory.type],
-    image: memory.type === 'photo' ? { caption: memory.caption ?? memory.title, meta: 'Family Archive Print' } : undefined,
-  })),
-)
+const FALLBACK_PARAGRAPH =
+  "This story is just beginning. The first memory added here will appear as the opening page of this chapter."
+const FALLBACK_PASSAGE = 'Every memory shared here — a story, a photo, a voice recording — becomes another page in this memoir.'
+
+/** Everything the Access & Sharing screens (public view, search, family memories, manage) need — derived live from the same real memoir shown at /book. */
+export function useHeirloomData(): HeirloomData {
+  const { bookMeta, bookStats, chapters } = useMemoirData()
+
+  return useMemo(() => {
+    const chapter = chapters[0]
+    const chapterMemories = chapter.memories
+
+    const memoirMeta = {
+      slug: SHARE_SLUG,
+      title: bookMeta.title,
+      subtitle: bookMeta.subtitle,
+      volume: 'Volume I',
+      establishedYear: new Date().getFullYear(),
+      chapterCount: chapters.length,
+      archiveCode: 'FAM-MEM-2026',
+      publicUrl: `https://memoirproject.org/m/${SHARE_SLUG}`,
+      visitsThisMonth: 0,
+      reflectionsPosted: 0,
+      totalContributors: bookStats.contributors,
+      createdLabel: 'Created today',
+      updatedLabel: 'Just now',
+      chapters: chapters.length,
+      stories: chapterMemories.filter((m) => m.type === 'text' || m.type === 'quote').length,
+      photos: chapterMemories.filter((m) => m.type === 'photo').length,
+      reflections: 0,
+    }
+
+    const initialReflections: Reflection[] = []
+
+    const photoMemory = chapterMemories.find((m) => m.type === 'photo')
+    const narrativeMemories = chapterMemories.filter((m) => m !== photoMemory)
+    const first = narrativeMemories[0]
+    const second = narrativeMemories[1]
+
+    const chapterOne = {
+      bgClassName: chapter.bgClassName,
+      title: `Chapter 1: ${chapter.title}`,
+      dedicatedTo: bookMeta.title,
+      curatedBy: chapterMemories[0]?.contributor ?? 'The Family',
+      readTime: chapterMemories.length > 0 ? '5 min read' : '1 min read',
+      paragraphs: [first?.body[0] ?? FALLBACK_PARAGRAPH, first?.body[1] ?? second?.body[0] ?? FALLBACK_PASSAGE],
+      photoCaption: photoMemory?.caption ?? photoMemory?.title ?? '',
+      photoCredit: photoMemory ? photoMemory.attribution.replace(/^—\s*/, '') : '',
+      closingParagraphs: [second?.body[0] ?? first?.body[2] ?? FALLBACK_PASSAGE],
+      livingPassage: first ? first.body[Math.min(2, first.body.length - 1)] : FALLBACK_PASSAGE,
+      finalParagraph: second ? second.body[second.body.length - 1] : first?.body[first.body.length - 1] ?? FALLBACK_PARAGRAPH,
+    }
+
+    const familyMemories: FamilyMemory[] = chapters.flatMap((c) =>
+      c.memories.map((memory) => ({
+        id: memory.id,
+        author: memory.contributor,
+        relation: 'Family',
+        initials: initialsOf(memory.contributor),
+        date: memory.date ?? c.dateRange,
+        postedLabel: `From Chapter ${c.number}: ${c.title}`,
+        era: `Era: ${c.tagline}`,
+        title: memory.title,
+        quote: memory.body.join(' '),
+        footnote: footnoteFor(memory),
+        image: memory.type === 'photo' ? { caption: memory.caption ?? memory.title, meta: 'Family Archive Print' } : undefined,
+        likes: likesFor(memory.id),
+      })),
+    )
+
+    const searchResults: SearchResult[] = chapters.flatMap((c) =>
+      c.memories.map((memory) => ({
+        id: memory.id,
+        kind: kindOf(memory.type),
+        category: categoryOf(memory.type),
+        badge: `Chapter ${c.number} • ${badgeNounByType[memory.type]}`,
+        title: memory.title,
+        excerpt: memory.type === 'photo' ? memory.caption ?? memory.title : memory.body[0],
+        metaLeft: memory.date ?? c.tagline,
+        metaAuthor: memory.contributor,
+        actionLabel: actionLabelByType[memory.type],
+        image: memory.type === 'photo' ? { caption: memory.caption ?? memory.title, meta: 'Family Archive Print' } : undefined,
+      })),
+    )
+
+    return { memoirMeta, initialReflections, chapterOne, familyMemories, searchResults }
+  }, [bookMeta, bookStats, chapters])
+}

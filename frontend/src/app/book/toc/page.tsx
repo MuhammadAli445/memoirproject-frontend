@@ -1,8 +1,10 @@
 'use client'
 
 import TocList from '@/components/book/TocList'
+import { useMemoirData } from '@/data/book'
 
 export default function TableOfContentsPage() {
+  const { bookMeta } = useMemoirData()
   return (
     <div className="flex min-h-screen bg-book-surface">
       <aside className="w-[300px] flex-shrink-0 border-r border-book-outline-variant bg-book-surface-container-low px-6 py-8">
@@ -17,9 +19,9 @@ export default function TableOfContentsPage() {
           <div className="mt-8 space-y-5 font-book-sans text-[17px] leading-relaxed text-book-on-surface">
             <p>This section introduces the memoir, provides context, and includes acknowledgments.</p>
             <p>
-              It gathers the notes written for Grandma Ayesha before her story begins — the dedication from her
-              family, a word of thanks to everyone who shared a memory, and a short guide to how this collection
-              is arranged, chapter by chapter, voice by voice.
+              It gathers the notes written for {bookMeta.title} before their story begins — a word of thanks to
+              everyone who shares a memory, and a short guide to how this collection is arranged, chapter by
+              chapter, voice by voice.
             </p>
           </div>
         </div>

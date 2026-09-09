@@ -10,9 +10,8 @@ import { FinalPreview } from "./screens/FinalPreview";
 import { MemoirReady } from "./screens/MemoirReady";
 import { CreateAccount } from "./screens/CreateAccount";
 
-const TOTAL_STEPS = 5;
-
-const STEP_DOTS = [1, 2, 3, 4, 5];
+// Begin, Identity, Details, Preview, Ready, Account.
+const TOTAL_STEPS = 6;
 
 function OnboardingFlowInner() {
   const router = useRouter();
@@ -21,12 +20,14 @@ function OnboardingFlowInner() {
 
   const goTo = (next: number) => setStep(next);
 
-  const header = step <= 3 && (
+  // Step 5 (CreateAccount) renders its own back/close controls, so the shared
+  // header only shows progress there to avoid duplicate buttons.
+  const header = (
     <StepHeader
       totalSteps={TOTAL_STEPS}
-      currentStep={STEP_DOTS[step]}
-      onBack={step > 0 ? () => goTo(step - 1) : undefined}
-      onClose={() => router.push("/login")}
+      currentStep={step + 1}
+      onBack={step > 0 && step < 5 ? () => goTo(step - 1) : undefined}
+      onClose={step < 5 ? () => router.push("/login") : undefined}
     />
   );
 

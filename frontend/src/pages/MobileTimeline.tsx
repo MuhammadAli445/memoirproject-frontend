@@ -46,7 +46,7 @@ export default function MobileTimeline() {
       </header>
 
       <div className="px-5 py-6">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-terracotta">Recent Entries</p>
+        <p className="text-sm font-medium uppercase tracking-[0.14em] text-terracotta">Recent Entries</p>
         <h2 className="mt-1 font-display text-[26px] text-charcoal">{subject.name}&apos;s Timeline</h2>
       </div>
 
@@ -61,7 +61,7 @@ export default function MobileTimeline() {
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
           <Mic className="h-4 w-4 text-charcoal/40" strokeWidth={1.75} />
         </div>
-        <p className="mt-3 text-xs font-medium uppercase tracking-[0.12em] text-charcoal/40">
+        <p className="mt-3 text-sm font-medium uppercase tracking-[0.12em] text-charcoal/40">
           End of Timeline
         </p>
       </div>
@@ -71,7 +71,7 @@ export default function MobileTimeline() {
         <div className="flex items-center justify-around">
           <button type="button" className="flex flex-col items-center gap-1 text-terracotta" aria-label="Feed">
             <Camera className="h-5 w-5" strokeWidth={1.75} />
-            <span className="text-[10px] font-medium uppercase tracking-wide">Feed</span>
+            <span className="text-sm font-medium uppercase tracking-wide">Feed</span>
           </button>
           <button
             type="button"
@@ -81,7 +81,7 @@ export default function MobileTimeline() {
             <span className="text-xl leading-none">+</span>
           </button>
           <button type="button" className="flex flex-col items-center gap-1 text-charcoal/50" aria-label="Settings">
-            <span className="text-[10px] font-medium uppercase tracking-wide">Settings</span>
+            <span className="text-sm font-medium uppercase tracking-wide">Settings</span>
           </button>
         </div>
       </nav>
@@ -104,7 +104,7 @@ function MobileMemoryCard({ memory }: { memory: Memory }) {
       {/* Card header */}
       <div className="flex items-start justify-between px-5 pt-5">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.1em] text-charcoal/40">
+          <p className="text-sm font-medium uppercase tracking-[0.1em] text-charcoal/40">
             {memory.type === 'voice' ? 'Voice Note' : 'Written Memory'} · {shortDate(memory.createdAt)}
           </p>
           <h3 className="mt-1 font-display text-xl text-charcoal">{memory.title}</h3>
@@ -130,13 +130,13 @@ function MobileMemoryCard({ memory }: { memory: Memory }) {
         {(memory.location || memory.type === 'text') && (
           <div className="mt-3 flex flex-wrap gap-2">
             {memory.location && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-3 py-1 text-xs font-medium text-terracotta">
+              <span className="inline-flex items-center gap-1 rounded-full bg-terracotta/10 px-3 py-1 text-sm font-medium text-terracotta">
                 <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
                 {memory.location}
               </span>
             )}
             {memory.type === 'text' && (
-              <span className="rounded-full bg-cream px-3 py-1 text-xs font-medium text-charcoal/50">
+              <span className="rounded-full bg-cream px-3 py-1 text-sm font-medium text-charcoal/50">
                 Family
               </span>
             )}
@@ -167,7 +167,7 @@ function MobileMemoryCard({ memory }: { memory: Memory }) {
                 />
               ))}
             </div>
-            <span className="flex-shrink-0 font-mono text-xs text-charcoal/40">
+            <span className="flex-shrink-0 font-mono text-sm text-charcoal/40">
               0:00 / {formatDuration(memory.audioDurationSeconds)}
             </span>
           </div>

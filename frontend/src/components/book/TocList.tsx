@@ -3,11 +3,12 @@
 import { ArrowLeft, Home } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { chapters } from '@/data/book'
+import { useMemoirData } from '@/data/book'
 
 export default function TocList({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { chapters } = useMemoirData()
 
   const isActive = (href: string) => pathname === href
 
@@ -25,14 +26,14 @@ export default function TocList({ onNavigate }: { onNavigate?: () => void }) {
           type="button"
           onClick={() => router.back()}
           aria-label="Go back"
-          className="rounded-full p-1.5 text-book-primary transition hover:bg-book-primary/10"
+          className="rounded-full p-2.5 text-book-primary transition hover:bg-book-primary/10"
         >
           <ArrowLeft className="h-5 w-5" strokeWidth={2} />
         </button>
         <Link
           href="/dashboard"
           aria-label="Go to dashboard"
-          className="rounded-full p-1.5 text-book-primary transition hover:bg-book-primary/10"
+          className="rounded-full p-2.5 text-book-primary transition hover:bg-book-primary/10"
         >
           <Home className="h-5 w-5" strokeWidth={2} />
         </Link>
@@ -66,7 +67,7 @@ export default function TocList({ onNavigate }: { onNavigate?: () => void }) {
                       key={memory.id}
                       href={memoryHref}
                       onClick={onNavigate}
-                      className={`block text-[14px] transition ${
+                      className={`block text-base transition ${
                         isActive(memoryHref)
                           ? 'font-semibold text-book-primary'
                           : 'text-book-on-surface-variant hover:text-book-primary'

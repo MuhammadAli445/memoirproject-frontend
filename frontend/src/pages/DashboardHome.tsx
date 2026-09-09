@@ -1,10 +1,10 @@
-import { BookOpen, Calendar, Camera, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Share2, Sparkles, Users } from 'lucide-react'
+import { BookOpen, Calendar, Camera, Feather, FileText, ImageOff, LogOut, Mic, PenLine, Plus, Share2, Sparkles, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import BackButton from '../components/BackButton'
 import { useMemories } from '../context/MemoryContext'
 import { useAuth } from '../context/AuthContext'
-import { useSubject } from '../data/subject'
-import { memoirMeta } from '../data/heirloom'
+import { useSubject, DEFAULT_SUBJECT } from '../data/subject'
+import { useHeirloomData } from '../data/heirloom'
 import { relativeTime } from '../utils/format'
 import type { Memory } from '../types'
 
@@ -24,9 +24,11 @@ export default function DashboardHome() {
   const { memories } = useMemories()
   const { user, logout } = useAuth()
   const subject = useSubject()
+  const { memoirMeta } = useHeirloomData()
 
   const recentMemories = memories.slice(0, 3)
   const hasMemories = memories.length > 0
+  const honoreeName = subject.name !== DEFAULT_SUBJECT.name ? subject.name : null
 
   return (
     <div className="flex min-h-screen bg-cream">
@@ -104,7 +106,7 @@ export default function DashboardHome() {
             </div>
             {/* Caption plate */}
             <div className="absolute -bottom-4 left-1/2 w-[85%] -translate-x-1/2 rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <p className="text-[11px] text-charcoal/50">{subject.name} · Family Archive</p>
+              <p className="text-sm text-charcoal/50">{subject.name} · Family Archive</p>
             </div>
           </div>
 
@@ -121,29 +123,37 @@ export default function DashboardHome() {
           <div className="mx-auto mt-6 h-px w-16 bg-charcoal/15" />
 
           {!hasMemories ? (
-            <>
-              <p className="mt-8 max-w-sm text-[15px] leading-relaxed text-charcoal/60">
-                Start with the memory that comes to you first.
+            <div className="mt-8 flex w-full max-w-md flex-col items-center rounded-2xl border border-terracotta/15 bg-gradient-to-b from-white to-cream/70 px-8 py-10 text-center shadow-sm">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
+                <Feather className="h-6 w-6" strokeWidth={1.75} />
+              </span>
+              <h3 className="mt-5 font-display text-2xl font-medium text-charcoal">
+                Your first memory is waiting
+              </h3>
+              <p className="mt-3 max-w-xs text-[15px] leading-relaxed text-charcoal/60">
+                {honoreeName
+                  ? `Every story you add becomes a page in ${honoreeName}'s memoir. There's no wrong place to start — just begin with whatever comes to mind.`
+                  : "Every story you add becomes a page in this memoir. There's no wrong place to start — just begin with whatever comes to mind."}
               </p>
               <button
                 type="button"
                 onClick={() => router.push('/workspace')}
-                className="mt-8 flex items-center gap-2 rounded-lg bg-terracotta px-8 py-3.5 text-sm font-semibold text-cream shadow-sm transition hover:-translate-y-0.5 hover:bg-terracotta-dark hover:shadow-soft active:translate-y-0"
+                className="mt-7 flex items-center gap-2 rounded-lg bg-terracotta px-8 py-3.5 text-sm font-semibold text-cream shadow-sm transition hover:-translate-y-0.5 hover:bg-terracotta-dark hover:shadow-soft active:translate-y-0"
               >
                 <PenLine className="h-4 w-4" strokeWidth={2} />
-                Add Memory
+                Add Your First Memory
               </button>
-            </>
+            </div>
           ) : (
             <div className="mt-8 w-full max-w-lg">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium uppercase tracking-[0.14em] text-charcoal/40">
+                <p className="text-sm font-medium uppercase tracking-[0.14em] text-charcoal/40">
                   Recent Memories
                 </p>
                 <button
                   type="button"
                   onClick={() => router.push('/workspace')}
-                  className="text-xs font-medium text-terracotta transition hover:text-terracotta-dark"
+                  className="text-sm font-medium text-terracotta transition hover:text-terracotta-dark"
                 >
                   View all →
                 </button>
@@ -178,13 +188,13 @@ function RecentMemoryRow({ memory }: { memory: Memory }) {
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm text-charcoal truncate">{memory.title}</p>
-        <p className="mt-0.5 text-xs text-charcoal/40">
+        <p className="mt-0.5 text-sm text-charcoal/40">
           {relativeTime(memory.createdAt)}
           {memory.location ? ` · ${memory.location}` : ''}
         </p>
       </div>
       {memory.isDraft && (
-        <span className="mt-0.5 rounded-full bg-terracotta/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-terracotta">
+        <span className="mt-0.5 rounded-full bg-terracotta/15 px-2 py-0.5 text-sm font-semibold uppercase tracking-wide text-terracotta">
           Draft
         </span>
       )}

@@ -3,10 +3,11 @@
 import { notFound } from 'next/navigation'
 import { use } from 'react'
 import BookChrome from '@/components/book/BookChrome'
-import { findChapter } from '@/data/book'
+import { useMemoirData } from '@/data/book'
 
 export default function ChapterPage({ params }: { params: Promise<{ chapterId: string }> }) {
   const { chapterId } = use(params)
+  const { findChapter } = useMemoirData()
   const chapter = findChapter(chapterId)
 
   if (!chapter) notFound()

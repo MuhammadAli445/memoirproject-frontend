@@ -7,7 +7,12 @@ import { useMemories } from '../context/MemoryContext'
 import { useSubject } from '../data/subject'
 import { formatDuration, fullDateUpper } from '../utils/format'
 import type { WorkspaceTab } from '../components/Sidebar'
-import type { Memory } from '../types'
+
+const FALLBACK_RECORDING = {
+  title: 'New Voice Recording',
+  body: 'Recording in progress…',
+  createdAt: new Date().toISOString(),
+}
 
 export default function RecordingScreen() {
   const router = useRouter()
@@ -17,7 +22,7 @@ export default function RecordingScreen() {
   const [isPaused, setIsPaused] = useState(false)
   const [elapsed, setElapsed] = useState(194)
 
-  const recordingMemory = memories.find((m) => m.id === 'seed-voice-1') as Memory
+  const recordingMemory = memories.find((m) => m.type === 'voice') ?? FALLBACK_RECORDING
 
   useEffect(() => {
     if (isPaused) return
@@ -38,10 +43,10 @@ export default function RecordingScreen() {
           </div>
           {/* Header row */}
           <div className="flex items-center justify-between">
-            <p className="font-mono text-xs tracking-[0.14em] text-charcoal/50">
+            <p className="font-mono text-sm tracking-[0.14em] text-charcoal/50">
               {fullDateUpper(recordingMemory.createdAt)}
             </p>
-            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-terracotta">
+            <span className="flex items-center gap-2 text-sm font-medium uppercase tracking-[0.14em] text-terracotta">
               <span className="h-2 w-2 rounded-full bg-terracotta animate-recordPulse" />
               Recording
             </span>
@@ -66,18 +71,18 @@ export default function RecordingScreen() {
               {/* Fake player controls */}
               <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 border-t border-charcoal/10 bg-white/90 px-4 py-2.5">
                 <button type="button" className="text-charcoal/50 hover:text-charcoal" aria-label="Previous">
-                  <span className="text-xs">⏮</span>
+                  <span className="text-sm">⏮</span>
                 </button>
                 <button type="button" className="text-terracotta hover:text-terracotta-dark" aria-label="Play">
                   <Play className="h-4 w-4" fill="currentColor" />
                 </button>
                 <button type="button" className="text-charcoal/50 hover:text-charcoal" aria-label="Next">
-                  <span className="text-xs">⏭</span>
+                  <span className="text-sm">⏭</span>
                 </button>
                 <div className="h-1 flex-1 rounded-full bg-charcoal/15">
                   <div className="h-full w-[40%] rounded-full bg-terracotta" />
                 </div>
-                <span className="font-mono text-xs text-charcoal/40">
+                <span className="font-mono text-sm text-charcoal/40">
                   {formatDuration(Math.floor(elapsed * 0.4))} / {formatDuration(elapsed)}
                 </span>
               </div>

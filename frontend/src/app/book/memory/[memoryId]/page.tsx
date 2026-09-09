@@ -8,12 +8,13 @@ import PhotoMemory from '@/components/book/memory-types/PhotoMemory'
 import VideoMemory from '@/components/book/memory-types/VideoMemory'
 import AudioMemory from '@/components/book/memory-types/AudioMemory'
 import TextMemory from '@/components/book/memory-types/TextMemory'
-import { findMemory } from '@/data/book'
+import { useMemoirData } from '@/data/book'
 
 const overlayTypes = new Set(['quote', 'video'])
 
 export default function MemoryPage({ params }: { params: Promise<{ memoryId: string }> }) {
   const { memoryId } = use(params)
+  const { findMemory } = useMemoirData()
   const memory = findMemory(memoryId)
 
   if (!memory) notFound()
